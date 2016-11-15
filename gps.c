@@ -12,7 +12,7 @@
 
 #include <gps.h>
 
-// Associe le tableau du circuit a celui choisit
+// Associe le tableau du circuit a celui choisi
 int * get_circuit(void){
 	switch(MAIN_PARAM){
 		case 1:  return C1;
@@ -33,5 +33,6 @@ int * get_circuit(void){
 
 // retourne le nombre d'intersection attendue
 void get_next_inter(int *index, int *next_inter_side, int *circuit){
-
+	*index++;
+	*next_inter_side = *circuit[*index][1];
 }

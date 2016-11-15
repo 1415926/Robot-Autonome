@@ -40,6 +40,8 @@ int main(void) {
 	// configuration
 	int *next_inter_side; // 1 = gauche & 2 = droite
 	int *circuit_index;
+	int *circuit;
+	circuit = get_circuit();
 
 	while(1){
 

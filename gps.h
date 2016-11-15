@@ -12,7 +12,7 @@
 // Constantes de circuits
 // index 1 : nombre d'intersection
 // index 2 : 1 = gauche | 2 = droite
-int C1[][] 	= {{1,1}, {1,2}, {1,1}, {1,1}, {1,1}, {1,2}, {1,2}}; 		// Boulangerie + Banque + Maison
+int C1[][] 	= {{1,1}, {1,1}, {1,2}, {1,1}, {1,1}, {1,2}, {1,2}}; 		// Boulangerie + Banque + Maison
 int C2[][] 	= {}; 														// Boulangerie + Hopital + Maison
 int C3[][] 	= {}; 														// Boulangerie + Poste + Maison
 int C4[][] 	= {}; 														// Banque + Hopital + Maison
@@ -26,7 +26,7 @@ int C11[][] = {}; 														// Poste + Hopital + Maison
 int C12[][] = {}; 														// Poste + Boulangerie + Maison
 
 // Protoypes
-void start_circuit(void);
+int * get_circuit(void);
 void get_next_inter(int *index, int *next_inter_side, int *circuit);
 
 #endif
