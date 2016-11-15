@@ -10,20 +10,23 @@
 #define __ROBOT_GPS_HEADER
 
 // Constantes de circuits
-int C1[] 	= {};
-int C2[] 	= {};
-int C3[] 	= {};
-int C4[] 	= {};
-int C5[] 	= {};
-int C6[] 	= {};
-int C7[] 	= {};
-int C8[] 	= {};
-int C9[] 	= {};
-int C10[] 	= {};
-int C11[] 	= {};
-int C12[] 	= {};
+// index 1 : nombre d'intersection
+// index 2 : 1 = gauche | 2 = droite
+int C1[][] 	= {{1,1}, {1,2}, {1,1}, {1,1}, {1,1}, {1,2}, {1,2}}; 		// Boulangerie + Banque + Maison
+int C2[][] 	= {}; 														// Boulangerie + Hopital + Maison
+int C3[][] 	= {}; 														// Boulangerie + Poste + Maison
+int C4[][] 	= {}; 														// Banque + Hopital + Maison
+int C5[][] 	= {}; 														// Banque + Poste + Maison
+int C6[][] 	= {}; 														// Banque + Boulangerie + Maison
+int C7[][] 	= {}; 														// Hopital + Banque + Maison
+int C8[][] 	= {}; 														// Hopital + Poste + Maison
+int C9[][] 	= {}; 														// Hopital + Boulangerie + Maison
+int C10[][] = {}; 														// Poste + Banque + Maison
+int C11[][] = {}; 														// Poste + Hopital + Maison
+int C12[][] = {}; 														// Poste + Boulangerie + Maison
 
 // Protoypes
 void start_circuit(void);
+void get_next_inter(int *index, int *next_inter_side, int *circuit);
 
 #endif
