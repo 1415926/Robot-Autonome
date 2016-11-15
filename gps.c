@@ -9,3 +9,7 @@
  *	- Fonction incrémentale de positionnement
  * 	- Mémorisation à chaque t de l'emplacement du robot
 */
+
+#include <gps.h>
+
+void
