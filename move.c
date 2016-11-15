@@ -10,6 +10,4 @@
  * 	-
 */
 
-#include <move.h>
-
-void
+#include "move.h"

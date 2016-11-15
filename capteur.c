@@ -10,6 +10,4 @@
  * 	-
 */
 
-#include <capteur.h>
-
-void
+#include "capteur.h"

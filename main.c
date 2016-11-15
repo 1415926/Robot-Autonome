@@ -7,7 +7,7 @@
  * 	Functions :
 */
 
-#include <main.h>
+#include "main.h"
 
 // Initialise tous les ports utiles
 void init_ports(void){
@@ -24,6 +24,18 @@ void init_ports(void){
 	P2SEL2 = 0x00;
 
 	// Interruptions
+	P1IE |= (BIT1); // Capteur
+	P1IE |= (BIT2); // Capteur
+	P1IE |= (BIT3); // Capteur
+	P1IE |= (BIT4); // Capteur
+	P1IES &= ~(BIT1); // Font montant
+	P1IES &= ~(BIT2); // Font montant
+	P1IES &= ~(BIT3); // Font montant
+	P1IES &= ~(BIT4); // Font montant
+	P1IFG &= ~(BIT1);
+	P1IFG &= ~(BIT2);
+	P1IFG &= ~(BIT3);
+	P1IFG &= ~(BIT4);
 }
 
 // Initialise le timer associé à la pwm
@@ -35,17 +47,15 @@ void init_pwm(void){
 int main(void) {
 	init_ports();
 	init_pwm();
-	__enable_interrupt();
 
 	// configuration
-	int *next_inter_side; // 1 = gauche & 2 = droite
+	int *next_inter_side;
 	int *circuit_index;
 	int *circuit;
 	circuit = get_circuit();
 
-	while(1){
-
-	}
+	__enable_interrupt();
+	while(1);
 	
 	return 0;
 }
@@ -56,12 +66,13 @@ __interrupt void PORT2_ISR(void) {
 	// if ( (capteur extérieur droit || capteur extérieur gauche) && !capteur milieu)
 	// repositionnement
 	// else if (capteur extérieur droit + capteur milieu + !capteur extérieur gauche)
-	// intersection à droite --> on tourne si demandé
+	// intersection à droite --> on tourne si demandé --> circuit = get_circuit();
 	// else if (capteur extérieur gauche + capteur milieu + !capteur extérieur droit)
-	// intersection à gauche --> on tourne si demandé
+	// intersection à gauche --> on tourne si demandé --> circuit = get_circuit();
 	// else if (capteur extérieur gauche + capteur milieu + capteur extérieur droit)
-	// intersection 2 côtés --> on tourne si demandé
+	// intersection 2 côtés --> on tourne si demandé --> circuit = get_circuit();
 	// }
+	//P1IFG &= ~(BIT3);
 }
 
 /*// Interruption PWM

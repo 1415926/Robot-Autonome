@@ -9,21 +9,24 @@
 #ifndef __ROBOT_GPS_HEADER
 #define __ROBOT_GPS_HEADER
 
+#define GAUCHE 1
+#define DROITE 2
+#define AVANCE 3
+
 // Constantes de circuits
 // index 1 : nombre d'intersection
-// index 2 : 1 = gauche | 2 = droite
-int C1[][] 	= {{1,1}, {1,1}, {1,2}, {1,1}, {1,1}, {1,2}, {1,2}}; 		// Boulangerie + Banque + Maison
-int C2[][] 	= {}; 														// Boulangerie + Hopital + Maison
-int C3[][] 	= {}; 														// Boulangerie + Poste + Maison
-int C4[][] 	= {}; 														// Banque + Hopital + Maison
-int C5[][] 	= {}; 														// Banque + Poste + Maison
-int C6[][] 	= {}; 														// Banque + Boulangerie + Maison
-int C7[][] 	= {}; 														// Hopital + Banque + Maison
-int C8[][] 	= {}; 														// Hopital + Poste + Maison
-int C9[][] 	= {}; 														// Hopital + Boulangerie + Maison
-int C10[][] = {}; 														// Poste + Banque + Maison
-int C11[][] = {}; 														// Poste + Hopital + Maison
-int C12[][] = {}; 														// Poste + Boulangerie + Maison
+static const int C1[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, DROITE, DROITE}; // Boulangerie + Banque + Maison
+static const int C2[] 	= {}; 														// Boulangerie + Hopital + Maison
+static const int C3[] 	= {}; 														// Boulangerie + Poste + Maison
+static const int C4[] 	= {}; 														// Banque + Hopital + Maison
+static const int C5[] 	= {}; 														// Banque + Poste + Maison
+static const int C6[] 	= {}; 														// Banque + Boulangerie + Maison
+static const int C7[] 	= {}; 						 								// Hopital + Banque + Maison
+static const int C8[] 	= {}; 														// Hopital + Poste + Maison
+static const int C9[] 	= {}; 														// Hopital + Boulangerie + Maison
+static const int C10[] 	= {}; 														// Poste + Banque + Maison
+static const int C11[] 	= {}; 														// Poste + Hopital + Maison
+static const int C12[] 	= {}; 														// Poste + Boulangerie + Maison
 
 // Protoypes
 int * get_circuit(void);

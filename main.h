@@ -13,9 +13,9 @@
 
 // includes
 #include <msp430g2553.h>
-#include <gps.h>
-#include <capteur.h>
-#include <move.h>
+#include "gps.h"
+#include "capteur.h"
+#include "move.h"
 
 // Prototypes
 void init_ports(void);
