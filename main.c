@@ -24,18 +24,19 @@ void init_ports(void){
 	P2SEL2 = 0x00;
 
 	// Interruptions
-	P1IE |= (BIT1); // Capteur
-	P1IE |= (BIT2); // Capteur
-	P1IE |= (BIT3); // Capteur
-	P1IE |= (BIT4); // Capteur
-	P1IES &= ~(BIT1); // Font montant
-	P1IES &= ~(BIT2); // Font montant
-	P1IES &= ~(BIT3); // Font montant
-	P1IES &= ~(BIT4); // Font montant
-	P1IFG &= ~(BIT1);
-	P1IFG &= ~(BIT2);
-	P1IFG &= ~(BIT3);
-	P1IFG &= ~(BIT4);
+	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
+	P1IE |= (CAPTEUR_BLANCHE_CENTRE); // Capteur Blanche Centre
+	P1IE |= (CAPTEUR_BLANCHE_DROIT); // Capteur Blanche Droite
+	P1IE |= (CAPTEUR_OBSTACLE); // Capteur Obstacle
+	P1IES &= ~(CAPTEUR_BLANCHE_GAUCHE); // Font montant
+	P1IES &= ~(CAPTEUR_BLANCHE_CENTRE); // Font montant
+	P1IES &= ~(CAPTEUR_BLANCHE_DROIT); // Font montant
+	P1IES &= ~(CAPTEUR_OBSTACLE); // Font montant
+	// Reset des flags
+	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
+	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
+	P1IFG &= ~(CAPTEUR_BLANCHE_DROIT);
+	P1IFG &= ~(CAPTEUR_OBSTACLE);
 }
 
 // Initialise le timer associé à la pwm
@@ -53,6 +54,7 @@ int main(void) {
 	int *circuit_index;
 	int *circuit;
 	circuit = get_circuit();
+	get_next_inter(&index, &next_inter_side, &circuit);
 
 	__enable_interrupt();
 	while(1);
@@ -63,16 +65,51 @@ int main(void) {
 // Interruption capteur
 #pragma vector=PORT2_VECTOR
 __interrupt void PORT2_ISR(void) {
-	// if ( (capteur extérieur droit || capteur extérieur gauche) && !capteur milieu)
-	// repositionnement
-	// else if (capteur extérieur droit + capteur milieu + !capteur extérieur gauche)
-	// intersection à droite --> on tourne si demandé --> circuit = get_circuit();
-	// else if (capteur extérieur gauche + capteur milieu + !capteur extérieur droit)
-	// intersection à gauche --> on tourne si demandé --> circuit = get_circuit();
-	// else if (capteur extérieur gauche + capteur milieu + capteur extérieur droit)
-	// intersection 2 côtés --> on tourne si demandé --> circuit = get_circuit();
-	// }
-	//P1IFG &= ~(BIT3);
+	// Capteur obstacle test
+	if(test_capt(CAPTEUR_OBSTACLE)){
+		// TODO : stop robot
+	}
+	// Ligne extérieure + !centre = Repositionnement
+	else if((test_capt(CAPTEUR_BLANCHE_DROIT) || test_capt(CAPTEUR_BLANCHE_GAUCHE)) && !test_capt(CAPTEUR_BLANCHE_CENTRE)){
+		// repositionnement
+	}
+	// Ligne extérieure droite + milieu + !gauche --> intersection à droite
+	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+		if(*next_inter_side == DROITE){
+			// TODO : On tourne à droite
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}else if(*next_inter_side == AVANCE){
+			// TODO : On continue d'avancer
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}
+	}
+	// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
+	else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+		if(*next_inter_side == GAUCHE){
+			// TODO : On tourne à gauche
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}else if(*next_inter_side == AVANCE){
+			// TODO : On continue d'avancer
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}
+	}
+	// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
+	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+		if(*next_inter_side == GAUCHE){
+			// TODO : On tourne à gauche
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}else if(*next_inter_side == DROITE){
+			// TODO : On tourne à droite
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}else if(*next_inter_side == AVANCE){
+			// TODO : On continue d'avancer
+			get_next_inter(&index, &next_inter_side, &circuit);
+		}
+	}
+	reset_capt(CAPTEUR_BLANCHE_CENTRE);
+	reset_capt(CAPTEUR_BLANCHE_DROIT);
+	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
+	reset_capt(CAPTEUR_OBSTACLE);
 }
 
 /*// Interruption PWM
