@@ -41,14 +41,8 @@ void init_ports(void){
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
 }
 
-// Initialise le timer associé à la pwm
-void init_pwm(void){
-
-}
-
 int main(void) {
 	init_ports();
-	init_pwm();
 
 	circuit = get_circuit();
 	get_next_inter(circuit_index, next_inter_side, circuit);
@@ -62,10 +56,14 @@ int main(void) {
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-	// Capteur obstacle test
+
+	if((P1IFG & BIT1) == BIT1){
+		P1OUT |= BIT6;
+	}
+
+	/*// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		// TODO : stop robot
-		P1OUT |= BIT6;
 	}
 	// Ligne extérieure + !centre = Repositionnement
 	else if((test_capt(CAPTEUR_BLANCHE_DROIT) || test_capt(CAPTEUR_BLANCHE_GAUCHE)) && !test_capt(CAPTEUR_BLANCHE_CENTRE)){
@@ -107,7 +105,7 @@ __interrupt void PORT1_ISR(void) {
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
-	reset_capt(CAPTEUR_OBSTACLE);
+	reset_capt(CAPTEUR_OBSTACLE);*/
 }
 
 /*// Interruption PWM

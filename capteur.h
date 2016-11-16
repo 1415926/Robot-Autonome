@@ -12,7 +12,7 @@
 #define CAPTEUR_BLANCHE_GAUCHE BIT1
 #define CAPTEUR_BLANCHE_CENTRE BIT2
 #define CAPTEUR_BLANCHE_DROIT BIT3
-#define CAPTEUR_OBSTACLE BIT4
+#define CAPTEUR_OBSTACLE BIT5
 
 int test_capt(char capt_adress);
 void reset_capt(char capt_adress);
