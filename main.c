@@ -30,10 +30,14 @@ void init_ports(void){
 	P1IE |= (CAPTEUR_BLANCHE_CENTRE); // Capteur Blanche Centre
 	P1IE |= (CAPTEUR_BLANCHE_DROIT); // Capteur Blanche Droite
 	P1IE |= (CAPTEUR_OBSTACLE); // Capteur Obstacle
-	P1IES &= ~(CAPTEUR_BLANCHE_GAUCHE); // Font montant
+	/*P1IES &= ~(CAPTEUR_BLANCHE_GAUCHE); // Font montant
 	P1IES &= ~(CAPTEUR_BLANCHE_CENTRE); // Font montant
 	P1IES &= ~(CAPTEUR_BLANCHE_DROIT); // Font montant
-	P1IES &= ~(CAPTEUR_OBSTACLE); // Font montant
+	P1IES &= ~(CAPTEUR_OBSTACLE); // Font montant*/
+	P1IES |= CAPTEUR_BLANCHE_GAUCHE; // Font montant
+	P1IES |= CAPTEUR_BLANCHE_CENTRE; // Font montant
+	P1IES |= CAPTEUR_BLANCHE_DROIT; // Font montant
+	P1IES |= CAPTEUR_OBSTACLE; // Font montant
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
@@ -44,8 +48,8 @@ void init_ports(void){
 int main(void) {
 	init_ports();
 
-	circuit = get_circuit();
-	get_next_inter(circuit_index, next_inter_side, circuit);
+	/*circuit = get_circuit();
+	get_next_inter(circuit_index, next_inter_side, circuit);*/
 
 	__enable_interrupt();
 	while(1);
@@ -56,16 +60,12 @@ int main(void) {
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-
-	if((P1IFG & BIT1) == BIT1){
-		P1OUT |= BIT6;
-	}
-
-	/*// Capteur obstacle test
+	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		// TODO : stop robot
+		P1OUT |= BIT6;
 	}
-	// Ligne extérieure + !centre = Repositionnement
+	/*// Ligne extérieure + !centre = Repositionnement
 	else if((test_capt(CAPTEUR_BLANCHE_DROIT) || test_capt(CAPTEUR_BLANCHE_GAUCHE)) && !test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement
 	}
