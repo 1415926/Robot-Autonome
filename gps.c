@@ -32,7 +32,7 @@ int * get_circuit(void){
 }
 
 // retourne le nombre d'intersection attendue
-void get_next_inter(int index, int next_inter_side, int circuit){
+void get_next_inter(int *index, int *next_inter_side, int *circuit){
 	*index++;
 	*next_inter_side = circuit[*index];
 }

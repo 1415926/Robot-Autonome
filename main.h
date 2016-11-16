@@ -22,4 +22,9 @@ void init_ports(void);
 void init_pwm(void);
 int main(void);
 
+// vars
+int *next_inter_side;
+int *circuit_index;
+int *circuit;
+
 #endif

@@ -15,18 +15,18 @@
 
 // Constantes de circuits
 // index 1 : nombre d'intersection
-static const int C1[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, DROITE, DROITE}; // Boulangerie + Banque + Maison
-static const int C2[] 	= {}; 														// Boulangerie + Hopital + Maison
-static const int C3[] 	= {}; 														// Boulangerie + Poste + Maison
-static const int C4[] 	= {}; 														// Banque + Hopital + Maison
-static const int C5[] 	= {}; 														// Banque + Poste + Maison
-static const int C6[] 	= {}; 														// Banque + Boulangerie + Maison
-static const int C7[] 	= {}; 						 								// Hopital + Banque + Maison
-static const int C8[] 	= {}; 														// Hopital + Poste + Maison
-static const int C9[] 	= {}; 														// Hopital + Boulangerie + Maison
-static const int C10[] 	= {}; 														// Poste + Banque + Maison
-static const int C11[] 	= {}; 														// Poste + Hopital + Maison
-static const int C12[] 	= {}; 														// Poste + Boulangerie + Maison
+static const int C1[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, DROITE, DROITE}; 	// Boulangerie + Banque + Maison
+static const int C2[] 	= {}; 															// Boulangerie + Hopital + Maison
+static const int C3[] 	= {}; 															// Boulangerie + Poste + Maison
+static const int C4[] 	= {}; 															// Banque + Hopital + Maison
+static const int C5[] 	= {}; 															// Banque + Poste + Maison
+static const int C6[] 	= {}; 															// Banque + Boulangerie + Maison
+static const int C7[] 	= {}; 						 									// Hopital + Banque + Maison
+static const int C8[] 	= {}; 															// Hopital + Poste + Maison
+static const int C9[] 	= {}; 															// Hopital + Boulangerie + Maison
+static const int C10[] 	= {}; 															// Poste + Banque + Maison
+static const int C11[] 	= {}; 															// Poste + Hopital + Maison
+static const int C12[] 	= {}; 															// Poste + Boulangerie + Maison
 
 // Protoypes
 int * get_circuit(void);
