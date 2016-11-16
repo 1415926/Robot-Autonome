@@ -9,4 +9,9 @@
 #ifndef __ROBOT_MOVE_HEADER
 #define __ROBOT_MOVE_HEADER
 
+//prototypes
+void avancer();
+void stop();
+void set_sens_avant();
+
 #endif
