@@ -33,12 +33,15 @@ void init_ports(void){
 	P1IE |= (CAPTEUR_BLANCHE_CENTRE); // Capteur Blanche Centre
 	P1IE |= (CAPTEUR_BLANCHE_DROIT); // Capteur Blanche Droite
 	P1IE |= (CAPTEUR_OBSTACLE); // Capteur Obstacle
-	P1IE |= BIT5; // A SUPPRIMER TEST
+
 	P1IES |= CAPTEUR_BLANCHE_GAUCHE; // Font descendant
 	P1IES |= CAPTEUR_BLANCHE_CENTRE; // Font descendant
 	P1IES |= CAPTEUR_BLANCHE_DROIT; // Font descendant
 	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
+
 	P1IES |= BIT5; // A SUPPRIMER TEST
+	P1IE |= BIT5; // A SUPPRIMER TEST
+
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);

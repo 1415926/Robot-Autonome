@@ -23,6 +23,6 @@ void stop(){
 }
 
 void set_sens_avant(){
-	P2OUT |= (BIT1); //sens
-	P2OUT &=~ BIT5; //sens
+	P2OUT &=~ (BIT1); //sens
+	P2OUT |= BIT5; //sens
 }
