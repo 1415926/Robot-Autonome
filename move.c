@@ -10,7 +10,7 @@
  * 	-
 */
 
-#include "move.h"
+#include "main.h"
 
 void avancer(){
 	P2OUT |= (BIT2);
