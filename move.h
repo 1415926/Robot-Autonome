@@ -10,8 +10,11 @@
 #define __ROBOT_MOVE_HEADER
 
 //prototypes
+void init_move();
 void avancer();
 void stop();
+void tourner_droite();
+void tourner_gauche();
 void set_sens_avant();
 
 #endif

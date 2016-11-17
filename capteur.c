@@ -28,7 +28,7 @@ void reset_capt(char capt_adress){
 // Retourne 1 si In --> 1
 int test_direct(char capt_adress){
 	if((P1IN & capt_adress) == capt_adress)
-		return 1;
-	else
 		return 0;
+	else
+		return 1;
 }

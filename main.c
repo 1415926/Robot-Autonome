@@ -39,9 +39,6 @@ void init_ports(void){
 	P1IES |= CAPTEUR_BLANCHE_DROIT; // Font descendant
 	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
 
-	P1IES |= BIT5; // A SUPPRIMER TEST
-	P1IE |= BIT5; // A SUPPRIMER TEST
-
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
@@ -54,18 +51,25 @@ int main(void) {
 
 	*circuit = get_circuit();
 	get_next_inter(circuit_index, next_inter_side, circuit);
-	set_sens_avant();
-
-	if(test_direct(BIT5)){
-		avancer();
-		P1OUT |= BIT6;
-	}else{
-		P1OUT &= ~BIT6;
-		set_sens_arriere();
-	}
+	init_move();
 
 	__enable_interrupt();
-	while(1);
+	while(1){
+		// A gauche
+		if(!test_direct(CAPTEUR_BLANCHE_GAUCHE)){
+			stop();
+			//tourner_droite();
+		}else{
+			// Ligne centrale
+			if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
+				set_sens_avant();
+				avancer();
+			}else{
+				stop();
+			}
+		}
+		//set_sens_avant();
+	}
 }
 
 // Interruption capteur
@@ -117,7 +121,6 @@ __interrupt void PORT1_ISR(void) {
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
 	reset_capt(CAPTEUR_OBSTACLE);
-	reset_capt(BIT5);
 }
 
 /*// Interruption PWM
