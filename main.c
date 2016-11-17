@@ -55,20 +55,12 @@ int main(void) {
 
 	__enable_interrupt();
 	while(1){
-		// A gauche
-		if(!test_direct(CAPTEUR_BLANCHE_GAUCHE)){
-			stop();
-			//tourner_droite();
+		// Ligne centrale
+		if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
+			avancer();
 		}else{
-			// Ligne centrale
-			if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
-				set_sens_avant();
-				avancer();
-			}else{
-				stop();
-			}
+			//stop();
 		}
-		//set_sens_avant();
 	}
 }
 
