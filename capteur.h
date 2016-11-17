@@ -15,6 +15,7 @@
 #define CAPTEUR_OBSTACLE BIT4
 
 int test_capt(char capt_adress);
+int test_direct(char capt_adress);
 void reset_capt(char capt_adress);
 
 #endif

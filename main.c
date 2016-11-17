@@ -56,6 +56,14 @@ int main(void) {
 	get_next_inter(circuit_index, next_inter_side, circuit);
 	set_sens_avant();
 
+	if(test_direct(BIT5)){
+		avancer();
+		P1OUT |= BIT6;
+	}else{
+		P1OUT &= ~BIT6;
+		set_sens_arriere();
+	}
+
 	__enable_interrupt();
 	while(1);
 }
@@ -68,11 +76,6 @@ __interrupt void PORT1_ISR(void) {
 		//P1OUT |= BIT6;
 	}
 
-	if(test_capt(BIT5)){
-		avancer();
-	}else{
-		stop();
-	}
 	/*// Ligne extérieure + !centre = Repositionnement
 	else if((test_capt(CAPTEUR_BLANCHE_DROIT) || test_capt(CAPTEUR_BLANCHE_GAUCHE)) && !test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement
