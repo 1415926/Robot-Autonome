@@ -79,10 +79,15 @@ int main(void) {
 __interrupt void PORT1_ISR(void) {
 	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		//P1OUT |= BIT6;
+		stop();
+	}
+	/*
+	// Capteur obstacle test
+	if(test_direct(CAPTEUR_OBSTACLE)){
+		P1OUT |= LED2;
 	}
 
-	/*// Ligne extérieure + !centre = Repositionnement
+	// Ligne extérieure + !centre = Repositionnement
 	else if((test_capt(CAPTEUR_BLANCHE_DROIT) || test_capt(CAPTEUR_BLANCHE_GAUCHE)) && !test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement
 	}
@@ -124,9 +129,3 @@ __interrupt void PORT1_ISR(void) {
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
 	reset_capt(CAPTEUR_OBSTACLE);
 }
-
-/*// Interruption PWM
-#pragma vector=PORT2_VECTOR
-__interrupt void PORT2_ISR(void) {
-
-}*/
