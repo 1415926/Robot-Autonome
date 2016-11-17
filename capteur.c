@@ -14,7 +14,7 @@
 
 // Retourne 1 si flag levé sinon 0
 int test_capt(char capt_adress){
-	if((P1IFG & capt_adress) == capt_adress)
+	if((P1IN & capt_adress) == capt_adress)
 		return 1;
 	else
 		return 0;
