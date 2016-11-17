@@ -59,7 +59,17 @@ int main(void) {
 		if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
 			avancer();
 		}else{
-			//stop();
+			stop();
+		}
+
+		// Gauche
+		if(test_direct(CAPTEUR_BLANCHE_GAUCHE)){
+			P1OUT |= LED1;
+		}
+
+		//Droite
+		if(test_direct(CAPTEUR_BLANCHE_DROIT)){
+			P1OUT |= LED2;
 		}
 	}
 }
