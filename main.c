@@ -15,17 +15,15 @@ void init_ports(void){
 
 	// PDIR
 	//P1DIR
-	P1DIR |= LED2;
-	P1OUT &= ~LED2;
-	P1DIR |= LED1;
-	P1OUT &= ~LED1;
+	P1DIR |= (LED1 | LED2);
+	P1OUT &= ~(LED1 | LED2);
 	//P2DIR
 	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
 
 	// PSEL
 	P1SEL |= LED2;
-	P2SEL |= MOTEUR_GAUCHE;
-	P2SEL2|= MOTEUR_GAUCHE;
+	/*P2SEL |= (MOTEUR_GAUCHE | MOTEUR_DROIT);
+	P2SEL2|= (MOTEUR_GAUCHE | MOTEUR_DROIT);*/
 
 	// Interruptions enable
 	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
@@ -61,7 +59,7 @@ void init_pwm(){
 	TA0CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA0CCR0)
 
 	/*** Timer1_A Set-Up ***/
-	TA1CCR0 |= 4000;					// Counter value
+	TA1CCR0 |= 2000;					// Counter value
 	TA1CCTL0 |= CCIE;				// Enable Timer1_A interrupts
 	TA1CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA1CCR0)
 
@@ -93,12 +91,18 @@ int main(void){
 
     TA0CCR1 += increment*2;			// Increase or decrease duty cycle
 
-    if( TA0CCR1 > 998 || TA0CCR1 < 2 ){
+    if(TA0CCR1 > 998 || TA0CCR1 < 2){
     	increment = -increment; 	// Reverse direction if it falls within values
+    	P2OUT &=~ MOTEUR_GAUCHE;
+    	P2OUT &=~ MOTEUR_DROIT;
+    }else if(TA0CCR1 > 300 || TA0CCR1 < 700){
+    	P2OUT |= MOTEUR_GAUCHE;
+    	P2OUT |= MOTEUR_DROIT;
     }else{
-    	//P2OUT |= MOTEUR_GAUCHE;
+    	P2OUT &=~ MOTEUR_GAUCHE;
+    	P2OUT &=~ MOTEUR_DROIT;
     }
-
+    TACTL &= ~TAIFG;
 }
 
 // Interruption capteur
