@@ -72,16 +72,19 @@ void init_pwm(){
 	TA1CTL |= TASSEL_1 + MC_1;
 	TACCTL0 = CCIE;*/
 
+	// V3
 	/*** Timer0_A Set-Up ***/
-	TA0CCR0 |= 1000-1;
-	TA0CCR1 |= 1;
-	TA0CCTL1 |= OUTMOD_7;
-	TA0CTL |= TASSEL_2 + MC_1;
+    TA0CCR0 |= 1000-1;
+    TA0CCR1 |= 1;
+    TA0CCTL1 |= OUTMOD_7;
+    TA0CTL |= TASSEL_2 + MC_1;
 
 	/*** Timer1_A Set-Up ***/
-	TA1CCR0 |= 4000-1;
-	TA1CCTL0 |= CCIE;
-	TA1CTL |= TASSEL_2 + MC_1;
+    TA1CCR0 |= 4000-1;
+    TA1CCTL0 |= CCIE;
+    TA1CTL |= TASSEL_2 + MC_1;
+
+    _BIS_SR(LPM0_bits + GIE);
 
 }
 
@@ -106,15 +109,15 @@ int main(void) {
 #pragma vector=TIMER1_A0_VECTOR
    __interrupt void Timer1_A0 (void) {
 
-    TA0CCR1 += INCREMENT_PWM;
-
+    TA0CCR1 += increment;
     if(TA0CCR1 > 999){
-    	TA0CCR1 = 0;
-    }else if(TA0CCR1 > 700 || TA0CCR1 < 200){
-    	//P2OUT |= (MOTEUR_DROIT);
+    	increment *= (-1);
+    	P2IFG &= ~(MOTEUR_DROIT);
+    }else if(TA0CCR1 > 700 && TA0CCR1 < 998){
+    	P2OUT |= (MOTEUR_DROIT);
     	P1OUT |= LED1;
     }else{
-    	//P2OUT &= ~(MOTEUR_DROIT);
+    	P2OUT &= ~(MOTEUR_DROIT);
     	P1OUT &= ~LED1;
     }
 }
