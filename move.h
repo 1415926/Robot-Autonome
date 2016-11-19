@@ -6,8 +6,8 @@
  * 	Date : 15/11/2016
 */
 
-#ifndef __ROBOT_MOVE_HEADER
-#define __ROBOT_MOVE_HEADER
+#ifndef ROBOT_MOVE_HEADER
+#define ROBOT_MOVE_HEADER
 
 #define MOTEUR_GAUCHE BIT2
 #define MOTEUR_DROIT BIT4

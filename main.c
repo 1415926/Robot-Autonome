@@ -83,15 +83,12 @@ void init_pwm(){
 	TA1CCTL0 |= CCIE;
 	TA1CTL |= TASSEL_2 + MC_1;
 
-	_BIS_SR(LPM0_bits + GIE);
-
 }
 
 int main(void) {
 	init_ports();
 	init_pwm();
-	*circuit = get_circuit();
-	get_next_inter(circuit_index, next_inter_side, circuit);
+	get_next_inter(circuit_index, next_inter_side, get_circuit());
 	init_move();
 
 	__enable_interrupt();
@@ -111,12 +108,15 @@ int main(void) {
 
     TA0CCR1 += INCREMENT_PWM;
 
-    if(TA0CCR1 > 999)
+    if(TA0CCR1 > 999){
     	TA0CCR1 = 0;
-    else if( TA0CCR1 > 500)
-    	P2OUT |= (MOTEUR_GAUCHE);
-    else
-    	P2OUT &= ~(MOTEUR_GAUCHE);
+    }else if(TA0CCR1 > 700 || TA0CCR1 < 200){
+    	//P2OUT |= (MOTEUR_DROIT);
+    	P1OUT |= LED1;
+    }else{
+    	//P2OUT &= ~(MOTEUR_DROIT);
+    	P1OUT &= ~LED1;
+    }
 }
 
 // Interruption capteur
@@ -151,33 +151,33 @@ __interrupt void PORT1_ISR(void) {
 	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == DROITE){
 			// TODO : On tourne à droite
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
 			// TODO : On continue d'avancer
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
 	}
 	// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
 	else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == GAUCHE){
 			// TODO : On tourne à gauche
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
 			// TODO : On continue d'avancer
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
 	}
 	// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
 	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == GAUCHE){
 			// TODO : On tourne à gauche
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == DROITE){
 			// TODO : On tourne à droite
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
 			// TODO : On continue d'avancer
-			get_next_inter(circuit_index, next_inter_side, circuit);
+			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
 	}*/
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);

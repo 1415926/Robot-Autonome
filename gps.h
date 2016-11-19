@@ -6,8 +6,8 @@
  * 	Date : 15/11/2016
 */
 
-#ifndef __ROBOT_GPS_HEADER
-#define __ROBOT_GPS_HEADER
+#ifndef ROBOT_GPS_HEADER
+#define ROBOT_GPS_HEADER
 
 #define GAUCHE 1
 #define DROITE 2
@@ -24,12 +24,12 @@ static const int C6[] 	= {}; 															// Banque + Boulangerie + Maison
 static const int C7[] 	= {}; 						 									// Hopital + Banque + Maison
 static const int C8[] 	= {}; 															// Hopital + Poste + Maison
 static const int C9[] 	= {}; 															// Hopital + Boulangerie + Maison
-static const int C10[] 	= {}; 															// Poste + Banque + Maison
-static const int C11[] 	= {}; 															// Poste + Hopital + Maison
-static const int C12[] 	= {}; 															// Poste + Boulangerie + Maison
+static const int C10[] = {}; 															// Poste + Banque + Maison
+static const int C11[] = {}; 															// Poste + Hopital + Maison
+static const int C12[] = {}; 															// Poste + Boulangerie + Maison
 
 // Protoypes
-int * get_circuit(void);
-void get_next_inter(int *index, int *next_inter_side, int *circuit);
+const int * get_circuit(void);
+void get_next_inter(int *index, int *next_inter_side, const int *circuit);
 
 #endif

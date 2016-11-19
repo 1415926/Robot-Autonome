@@ -13,7 +13,7 @@
 #include "main.h"
 
 // Associe le tableau du circuit a celui choisi
-int * get_circuit(void){
+const int * get_circuit(void){
 	switch(MAIN_PARAM){
 		case 1:  return C1;
 		case 2:  return C2;
@@ -32,7 +32,7 @@ int * get_circuit(void){
 }
 
 // retourne le nombre d'intersection attendue
-void get_next_inter(int *index, int *next_inter_side, int *circuit){
+void get_next_inter(int *index, int *next_inter_side, const int *circuit){
 	*index++;
 	*next_inter_side = circuit[*index];
 }

@@ -5,8 +5,8 @@
  * 	Version : 1.0
  * 	Date : 15/11/2016
 */
-#ifndef __ROBOT_MAIN_HEADER
-#define __ROBOT_MAIN_HEADER
+#ifndef ROBOT_MAIN_HEADER
+#define ROBOT_MAIN_HEADER
 
 // Paramètres
 #define MAIN_PARAM 1
@@ -28,6 +28,5 @@ int main(void);
 // vars
 int *next_inter_side;
 int *circuit_index;
-int *circuit;
 
 #endif
