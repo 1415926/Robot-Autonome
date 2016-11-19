@@ -43,28 +43,13 @@ void init_ports(void){
 
 void init_pwm(){
 	/*** GPIO Set-Up ***/
-	//P2SEL |= (MOTEUR_GAUCHE | MOTEUR_DROIT);
+	P2SEL |= (MOTEUR_GAUCHE | MOTEUR_DROIT);
 	P1SEL |= (BIT6);
 
 	DCOCTL = 0;             		// Select lowest DCOx and MODx
 	BCSCTL1 = CALBC1_1MHZ;  		// Set range
 	DCOCTL = CALDCO_1MHZ;   		// Set DCO step + modulation
 
-	/*// Timer0_A Set-Up
-	TA0CCR0 |= 1000 - 1;
-	TA0CCTL1 |= OUTMOD_7;
-	TA0CCR1 |= 100;
-	TA0CTL |= TASSEL_1 + MC_1;
-	TACCTL0 = CCIE;
-
-	// Timer1_A Set-Up
-	TA1CCR0 |= 1000 - 1;
-	TA1CCTL1 |= OUTMOD_7;
-	TA1CCR1 |= 100;
-	TA1CTL |= TASSEL_1 + MC_1;
-	TACCTL0 = CCIE;*/
-
-	// V3
 	// Timer0_A Set-Up
 	TA0CCR0 |= 1000;					// PWM period
 	TA0CCR1 |= 1;					// TA0CCR1 PWM duty cycle

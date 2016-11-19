@@ -24,6 +24,8 @@ void init_ports(void){
 
 	// PSEL
 	P1SEL |= LED2;
+	P2SEL |= MOTEUR_GAUCHE;
+	P2SEL2|= MOTEUR_GAUCHE;
 
 	// Interruptions enable
 	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
@@ -91,8 +93,12 @@ int main(void){
 
     TA0CCR1 += increment*2;			// Increase or decrease duty cycle
 
-    if( TA0CCR1 > 998 || TA0CCR1 < 2 )	// Reverse direction if it falls within values
-    	increment = -increment;
+    if( TA0CCR1 > 998 || TA0CCR1 < 2 ){
+    	increment = -increment; 	// Reverse direction if it falls within values
+    }else{
+    	//P2OUT |= MOTEUR_GAUCHE;
+    }
+
 }
 
 // Interruption capteur
