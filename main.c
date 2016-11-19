@@ -55,20 +55,36 @@ void init_ports(void){
 
 void init_pwm(){
 	/*** GPIO Set-Up ***/
-	P2SEL |= (BIT2 | BIT4);
-	P2SEL2 |= (BIT2 | BIT4);
+	/*P2SEL |= (BIT2 | BIT4);
+	P2SEL2 |= (BIT2 | BIT4);*/
 
-	/*** Timer0_A Set-Up ***/
+	/*// Timer0_A Set-Up
 	TA0CCR0 |= 1000 - 1;
 	TA0CCTL1 |= OUTMOD_7;
 	TA0CCR1 |= 100;
 	TA0CTL |= TASSEL_1 + MC_1;
+	TACCTL0 = CCIE;
 
-	/*** Timer1_A Set-Up ***/
+	// Timer1_A Set-Up
 	TA1CCR0 |= 1000 - 1;
 	TA1CCTL1 |= OUTMOD_7;
 	TA1CCR1 |= 100;
 	TA1CTL |= TASSEL_1 + MC_1;
+	TACCTL0 = CCIE;*/
+
+	/*** Timer0_A Set-Up ***/
+	TA0CCR0 |= 1000-1;
+	TA0CCR1 |= 1;
+	TA0CCTL1 |= OUTMOD_7;
+	TA0CTL |= TASSEL_2 + MC_1;
+
+	/*** Timer1_A Set-Up ***/
+	TA1CCR0 |= 4000-1;
+	TA1CCTL0 |= CCIE;
+	TA1CTL |= TASSEL_2 + MC_1;
+
+	_BIS_SR(LPM0_bits + GIE);
+
 }
 
 int main(void) {
@@ -90,17 +106,29 @@ int main(void) {
 }
 
 // Interruption pwm
-#pragma vector=TIMER0_A0_VECTOR
+/*#pragma vector=TIMER0_A0_VECTOR
 __interrupt void Timer0_A0 (void) {
-	   //if(TA0CCR1 > 100)
-		   P2OUT |= (BIT2);
+	//if(TA0CCR1 > 100)
+	P2OUT |= (MOTEUR_GAUCHE);
+	P1OUT |= (LED1);
+	P2IFG &= ~(MOTEUR_GAUCHE);
 }
 
 // Interruption pwm
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void Timer1_A0 (void) {
-	   //if(TA1CCR1 > 100)
-		   P2OUT |= (BIT4);
+	//if(TA1CCR1 > 100)
+	P2OUT |= (MOTEUR_DROIT);
+	P1OUT |= (LED2);
+	P2IFG &= ~(MOTEUR_DROIT);
+}*/
+#pragma vector=TIMER1_A0_VECTOR
+   __interrupt void Timer1_A0 (void) {
+
+    TA0CCR1 += INCREMENT_PWM*2;
+
+    if( TA0CCR1 > 998 || TA0CCR1 < 2 )
+       IncDec_PWM = -IncDec_PWM;
 }
 
 // Interruption capteur

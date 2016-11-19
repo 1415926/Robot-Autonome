@@ -12,6 +12,7 @@
 #define MAIN_PARAM 1
 #define LED1 BIT0
 #define LED2 BIT6
+#define INCREMENT_PWM 5
 
 // includes
 #include <msp430g2553.h>
