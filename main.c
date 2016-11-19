@@ -28,59 +28,99 @@ void init_ports(void){
 	P2SEL = 0x00;
 	P2SEL2 = 0x00;
 
-	// Interruptions
+	// Interruptions enable
 	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
 	P1IE |= (CAPTEUR_BLANCHE_CENTRE); // Capteur Blanche Centre
 	P1IE |= (CAPTEUR_BLANCHE_DROIT); // Capteur Blanche Droite
 	P1IE |= (CAPTEUR_OBSTACLE); // Capteur Obstacle
+	P2IE |= (MOTEUR_GAUCHE); // Moteur gauche
+	P2IE |= (MOTEUR_DROIT); // Moteur droit
 
+	// Define front
 	P1IES |= CAPTEUR_BLANCHE_GAUCHE; // Font descendant
 	P1IES |= CAPTEUR_BLANCHE_CENTRE; // Font descendant
 	P1IES |= CAPTEUR_BLANCHE_DROIT; // Font descendant
 	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
+	P1IES &= ~(MOTEUR_GAUCHE); // Font montant
+	P1IES &= ~(MOTEUR_DROIT); // Font montant
 
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_DROIT);
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
+	P2IFG &= ~(MOTEUR_GAUCHE);
+	P2IFG &= ~(MOTEUR_DROIT);
+}
+
+void init_pwm(){
+	/*** GPIO Set-Up ***/
+	P2SEL |= (BIT2 | BIT4);
+	P2SEL2 |= (BIT2 | BIT4);
+
+	/*** Timer0_A Set-Up ***/
+	TA0CCR0 |= 1000 - 1;
+	TA0CCTL1 |= OUTMOD_7;
+	TA0CCR1 |= 100;
+	TA0CTL |= TASSEL_1 + MC_1;
+
+	/*** Timer1_A Set-Up ***/
+	TA1CCR0 |= 1000 - 1;
+	TA1CCTL1 |= OUTMOD_7;
+	TA1CCR1 |= 100;
+	TA1CTL |= TASSEL_1 + MC_1;
 }
 
 int main(void) {
 	init_ports();
-
+	init_pwm();
 	*circuit = get_circuit();
 	get_next_inter(circuit_index, next_inter_side, circuit);
 	init_move();
 
 	__enable_interrupt();
 	while(1){
-		// Ligne centrale
+		/*// Ligne centrale
 		if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
 			avancer();
 		}else{
 			stop();
-		}
-
-		// Gauche
-		if(test_direct(CAPTEUR_BLANCHE_GAUCHE)){
-			P1OUT |= LED1;
-		}
-
-		//Droite
-		if(test_direct(CAPTEUR_BLANCHE_DROIT)){
-			P1OUT |= LED2;
-		}
+		}*/
 	}
+}
+
+// Interruption pwm
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void Timer0_A0 (void) {
+	   //if(TA0CCR1 > 100)
+		   P2OUT |= (BIT2);
+}
+
+// Interruption pwm
+#pragma vector=TIMER1_A0_VECTOR
+__interrupt void Timer1_A0 (void) {
+	   //if(TA1CCR1 > 100)
+		   P2OUT |= (BIT4);
 }
 
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-	// Capteur obstacle test
+	/*// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		stop();
 	}
+
+	// Gauche
+	if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+		P1OUT |= LED1;
+	}
+
+	//Droite
+	if(test_capt(CAPTEUR_BLANCHE_DROIT)){
+		P1OUT |= LED2;
+	}*/
+
 	/*
 	// Capteur obstacle test
 	if(test_direct(CAPTEUR_OBSTACLE)){

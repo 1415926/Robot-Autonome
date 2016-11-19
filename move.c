@@ -18,13 +18,13 @@ void init_move(){
 }
 
 void avancer(){
-	P2OUT |= (BIT2);
-	P2OUT |= (BIT4);
+	P2OUT |= (MOTEUR_GAUCHE);
+	P2OUT |= (MOTEUR_DROIT);
 }
 
 void stop(){
-	P2OUT &=~ (BIT2);
-	P2OUT &=~ (BIT4);
+	P2OUT &=~ (MOTEUR_GAUCHE);
+	P2OUT &=~ (MOTEUR_DROIT);
 }
 
 /**
@@ -32,8 +32,8 @@ void stop(){
  * Roue B avant
  */
 void tourner_droite(){
-	P2OUT |= BIT1; //A
-	P2OUT |= BIT5; //B
+	P2OUT |= ROUE_GAUCHE; //A
+	P2OUT |= ROUE_DROITE; //B
 }
 
 /**
@@ -41,11 +41,11 @@ void tourner_droite(){
  * Roue B arrière
  */
 void tourner_gauche(){
-	P2OUT &=~ (BIT1); //sens
-	P2OUT &=~ (BIT5); //sens
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT &=~ (ROUE_DROITE); //sens
 }
 
 void set_sens_avant(){
-	P2OUT &=~ (BIT1); //sens
-	P2OUT |= BIT5; //sens
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
 }

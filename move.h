@@ -9,6 +9,11 @@
 #ifndef __ROBOT_MOVE_HEADER
 #define __ROBOT_MOVE_HEADER
 
+#define MOTEUR_GAUCHE BIT2
+#define MOTEUR_DROIT BIT4
+#define ROUE_GAUCHE BIT1
+#define ROUE_DROITE BIT5
+
 //prototypes
 void init_move();
 void avancer();
