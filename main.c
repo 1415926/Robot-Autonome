@@ -106,29 +106,17 @@ int main(void) {
 }
 
 // Interruption pwm
-/*#pragma vector=TIMER0_A0_VECTOR
-__interrupt void Timer0_A0 (void) {
-	//if(TA0CCR1 > 100)
-	P2OUT |= (MOTEUR_GAUCHE);
-	P1OUT |= (LED1);
-	P2IFG &= ~(MOTEUR_GAUCHE);
-}
-
-// Interruption pwm
-#pragma vector=TIMER1_A0_VECTOR
-__interrupt void Timer1_A0 (void) {
-	//if(TA1CCR1 > 100)
-	P2OUT |= (MOTEUR_DROIT);
-	P1OUT |= (LED2);
-	P2IFG &= ~(MOTEUR_DROIT);
-}*/
 #pragma vector=TIMER1_A0_VECTOR
    __interrupt void Timer1_A0 (void) {
 
-    TA0CCR1 += INCREMENT_PWM*2;
+    TA0CCR1 += INCREMENT_PWM;
 
-    if( TA0CCR1 > 998 || TA0CCR1 < 2 )
-       IncDec_PWM = -IncDec_PWM;
+    if(TA0CCR1 > 999)
+    	TA0CCR1 = 0;
+    else if( TA0CCR1 > 500)
+    	P2OUT |= (MOTEUR_GAUCHE);
+    else
+    	P2OUT &= ~(MOTEUR_GAUCHE);
 }
 
 // Interruption capteur
