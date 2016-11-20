@@ -5,3 +5,5 @@ Debug/capteur.d
 *.obj
 Debug/main.d
 *.obj
+*.xml
+Debug/Robot_Autonome_linkInfo.xml
