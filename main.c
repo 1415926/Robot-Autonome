@@ -54,13 +54,13 @@ void init_pwm(){
 	increment = 1;
 
 	/*** Timer0_A Set-Up ***/
-	TA0CCR0 |= 1000;					// PWM period
+	TA0CCR0 |= PWM_PERIOD;			// PWM period
 	TA0CCR1 |= 1;					// TA0CCR1 PWM duty cycle
 	TA0CCTL1 |= OUTMOD_7;			// TA0CCR1 output mode = reset/set
 	TA0CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA0CCR0)
 
 	/*** Timer1_A Set-Up ***/
-	TA1CCR0 |= 2000;					// Counter value
+	TA1CCR0 |= COUNTER_VALUE;				// Counter value
 	TA1CCTL0 |= CCIE;				// Enable Timer1_A interrupts
 	TA1CTL |= TASSEL_2 + MC_1;		// SMCLK, Up Mode (Counts to TA1CCR0)
 
@@ -85,9 +85,18 @@ int main(void){
 #pragma vector=TIMER1_A0_VECTOR     // Timer1 A0 interrupt service routine
    __interrupt void Timer1_A0 (void) {
 
-    TA0CCR1 += increment*2;			// Increase or decrease duty cycle
+    TA0CCR1 += increment*2;
 
-    if(TA0CCR1 > 998 || TA0CCR1 < 2){
+    // SET sens
+    switch(*engine_sens){
+    	case 1:set_sens_avant();break;
+    	case 2:tourner_droite();break;
+    	case 3:tourner_gauche();break;
+   		default:set_sens_avant();break;
+    }
+
+    // Increase or decrease duty cycle
+    if(TA0CCR1 > (PWM_PERIOD - 2) || TA0CCR1 < 2){
     	increment = -increment; 	// Reverse direction if it falls within values
     	stop(engine_left, engine_right);
     }else{
@@ -122,12 +131,12 @@ int main(void){
 __interrupt void PORT1_ISR(void) {
 	// Ligne centrale
 	if(!test_direct(CAPTEUR_BLANCHE_CENTRE)){
-		stop(engine_left, engine_right);
+		//stop(engine_left, engine_right);
 	}
 
 	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		stop(engine_left, engine_right);
+		//stop(engine_left, engine_right);
 	}
 
 	// Gauche

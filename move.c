@@ -13,6 +13,8 @@
 #include "main.h"
 
 void init_move(int *engine_left, int *engine_right){
+	*engine_left 	= MOTEUR_STOP;
+	*engine_right 	= MOTEUR_STOP;
 	stop(engine_left, engine_right);
 	set_sens_avant();
 }

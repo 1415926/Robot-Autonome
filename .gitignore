@@ -1,0 +1,7 @@
+*.mk
+Debug/move.obj
+*.prefs
+Debug/capteur.d
+*.obj
+Debug/main.d
+*.obj
