@@ -13,6 +13,10 @@
 #define MOTEUR_DROIT BIT4
 #define ROUE_GAUCHE BIT1
 #define ROUE_DROITE BIT5
+#define MOTEUR_GAUCHE_PWM_HAUT 700
+#define MOTEUR_GAUCHE_PWM_BAS 500
+#define MOTEUR_DROIT_PWM_HAUT 950
+#define MOTEUR_DROIT_PWM_BAS 800
 
 //prototypes
 void init_move();

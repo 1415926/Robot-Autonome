@@ -95,11 +95,30 @@ int main(void){
     if(TA0CCR1 > 998 || TA0CCR1 < 2){
     	increment = -increment; 	// Reverse direction if it falls within values
     	stop();
-    }else if(TA0CCR1 > 500 && TA0CCR1 < 700){
-    	//P2OUT |= MOTEUR_GAUCHE;
-    	P2OUT |= MOTEUR_DROIT;
     }else{
-		stop();
+    	/**
+		 * PWM GAUCHE
+		 */
+		// MARCHE
+		if(TA0CCR1 > MOTEUR_GAUCHE_PWM_BAS && TA0CCR1 < MOTEUR_GAUCHE_PWM_HAUT){
+			P2OUT |= MOTEUR_GAUCHE;
+		}
+		// STOP
+		else{
+			P2OUT &=~MOTEUR_GAUCHE;
+		}
+
+		/**
+		 * PWM DROIT
+		 */
+		// MARCHE
+		if(TA0CCR1 > MOTEUR_DROIT_PWM_BAS && TA0CCR1 < MOTEUR_DROIT_PWM_HAUT){
+			P2OUT |= MOTEUR_DROIT;
+		}
+		// STOP
+		else{
+			P2OUT &=~MOTEUR_DROIT;
+		}
     }
 }
 
