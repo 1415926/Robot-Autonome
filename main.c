@@ -19,6 +19,7 @@ void init_ports(void){
 	P1OUT &= ~(LED1 | LED2);
 	//P2DIR
 	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
+	P2OUT &= ~(BIT1 | BIT2 | BIT4 | BIT5);
 
 	// PSEL
 	P1SEL |= LED2;
@@ -93,16 +94,13 @@ int main(void){
 
     if(TA0CCR1 > 998 || TA0CCR1 < 2){
     	increment = -increment; 	// Reverse direction if it falls within values
-    	P2OUT &=~ MOTEUR_GAUCHE;
-    	P2OUT &=~ MOTEUR_DROIT;
-    }else if(TA0CCR1 > 300 || TA0CCR1 < 700){
-    	P2OUT |= MOTEUR_GAUCHE;
+    	stop();
+    }else if(TA0CCR1 > 500 && TA0CCR1 < 700){
+    	//P2OUT |= MOTEUR_GAUCHE;
     	P2OUT |= MOTEUR_DROIT;
     }else{
-    	P2OUT &=~ MOTEUR_GAUCHE;
-    	P2OUT &=~ MOTEUR_DROIT;
+		stop();
     }
-    TACTL &= ~TAIFG;
 }
 
 // Interruption capteur
