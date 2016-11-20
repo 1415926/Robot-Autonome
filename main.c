@@ -68,22 +68,17 @@ void init_pwm(){
 }
 
 int main(void){
+	/**
+	 * INITIALISATION
+	 */
 	init_ports();
 	init_pwm();
+	init_move(engine_left, engine_right);
 
+	// INIT circuit
 	get_next_inter(circuit_index, next_inter_side, get_circuit());
-	init_move();
 
 	__enable_interrupt();
-
-	/*while(1){
-		// Ligne centrale
-		if(test_direct(CAPTEUR_BLANCHE_CENTRE)){
-			avancer();
-		}else{
-			stop();
-		}
-	}*/
 }
 
 // Interruption pwm
@@ -94,18 +89,18 @@ int main(void){
 
     if(TA0CCR1 > 998 || TA0CCR1 < 2){
     	increment = -increment; 	// Reverse direction if it falls within values
-    	stop();
+    	stop(engine_left, engine_right);
     }else{
     	/**
 		 * PWM GAUCHE
 		 */
 		// MARCHE
 		if(TA0CCR1 > MOTEUR_GAUCHE_PWM_BAS && TA0CCR1 < MOTEUR_GAUCHE_PWM_HAUT){
-			P2OUT |= MOTEUR_GAUCHE;
+			start_left(engine_left);
 		}
 		// STOP
 		else{
-			P2OUT &=~MOTEUR_GAUCHE;
+			stop_left(engine_left);
 		}
 
 		/**
@@ -113,11 +108,11 @@ int main(void){
 		 */
 		// MARCHE
 		if(TA0CCR1 > MOTEUR_DROIT_PWM_BAS && TA0CCR1 < MOTEUR_DROIT_PWM_HAUT){
-			P2OUT |= MOTEUR_DROIT;
+			start_right(engine_right);
 		}
 		// STOP
 		else{
-			P2OUT &=~MOTEUR_DROIT;
+			stop_right(engine_right);
 		}
     }
 }
@@ -125,9 +120,14 @@ int main(void){
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-	/*// Capteur obstacle test
+	// Ligne centrale
+	if(!test_direct(CAPTEUR_BLANCHE_CENTRE)){
+		stop(engine_left, engine_right);
+	}
+
+	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		stop();
+		stop(engine_left, engine_right);
 	}
 
 	// Gauche
@@ -138,7 +138,7 @@ __interrupt void PORT1_ISR(void) {
 	//Droite
 	if(test_capt(CAPTEUR_BLANCHE_DROIT)){
 		P1OUT |= LED2;
-	}*/
+	}
 
 	/*
 	// Capteur obstacle test

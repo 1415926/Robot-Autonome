@@ -12,19 +12,39 @@
 
 #include "main.h"
 
-void init_move(){
-	stop();
+void init_move(int *engine_left, int *engine_right){
+	stop(engine_left, engine_right);
 	set_sens_avant();
 }
 
-void avancer(){
-	P2OUT |= (MOTEUR_GAUCHE);
-	P2OUT |= (MOTEUR_DROIT);
+void start(int *engine_left, int *engine_right){
+	start_left(engine_left);
+	start_right(engine_right);
 }
 
-void stop(){
-	P2OUT &=~ (MOTEUR_GAUCHE);
-	P2OUT &=~ (MOTEUR_DROIT);
+void stop(int *engine_left, int *engine_right){
+	stop_left(engine_left);
+	stop_right(engine_right);
+}
+
+void start_left(int *engine_left){
+	*engine_left 	= MOTEUR_START;
+	P2OUT 			|= (MOTEUR_GAUCHE);
+}
+
+void start_right(int *engine_right){
+	*engine_right 	= MOTEUR_START;
+	P2OUT 			|= (MOTEUR_DROIT);
+}
+
+void stop_left(int *engine_left){
+	*engine_left 	= MOTEUR_STOP;
+	P2OUT 			&=~ (MOTEUR_GAUCHE);
+}
+
+void stop_right(int *engine_right){
+	*engine_right 	= MOTEUR_STOP;
+	P2OUT 			&=~ (MOTEUR_DROIT);
 }
 
 /**
