@@ -14,6 +14,7 @@
 #define LED2 BIT6
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
+#define TURN_VALUE 100
 #define PWM_PERIOD 100
 #define COUNTER_VALUE (PWM_PERIOD * 2)
 
@@ -35,5 +36,6 @@ int increment;
 int *engine_left;
 int *engine_right;
 int *engine_sens;
-
+int *turn_left;
+int *turn_right;
 #endif

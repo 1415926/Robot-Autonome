@@ -12,9 +12,11 @@
 
 #include "main.h"
 
-void init_move(int *engine_left, int *engine_right){
+void init_move(int *engine_left, int *engine_right, int *turn_left, int *turn_right){
 	*engine_left 	= MOTEUR_STOP;
 	*engine_right 	= MOTEUR_STOP;
+	*turn_left		= 0;
+	*turn_right		= 0;
 	stop(engine_left, engine_right);
 	set_sens_avant();
 }
@@ -49,11 +51,27 @@ void stop_right(int *engine_right){
 	P2OUT 			&=~ (MOTEUR_DROIT);
 }
 
+void correction_right(int *turn_right){
+	*turn_right = 1;
+}
+
+void correction_left(int *turn_left){
+	*turn_left = 1;
+}
+
+void clean_right(int *turn_right){
+	*turn_right = 0;
+}
+
+void clean_left(int *turn_left){
+	*turn_left = 0;
+}
+
 /**
  * Roue A arrière
  * Roue B avant
  */
-void tourner_droite(){
+void rotation_right(){
 	P2OUT |= ROUE_GAUCHE; //A
 	P2OUT |= ROUE_DROITE; //B
 }
@@ -62,7 +80,7 @@ void tourner_droite(){
  * Roue A avant
  * Roue B arrière
  */
-void tourner_gauche(){
+void rotation_left(){
 	P2OUT &=~ (ROUE_GAUCHE); //sens
 	P2OUT &=~ (ROUE_DROITE); //sens
 }

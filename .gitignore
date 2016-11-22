@@ -7,3 +7,4 @@ Debug/main.d
 *.obj
 *.xml
 Debug/Robot_Autonome_linkInfo.xml
+/Debug/
