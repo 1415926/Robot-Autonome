@@ -12,9 +12,9 @@
 
 #include "main.h"
 
-// Retourne 1 si flag levé sinon 0
+// Retourne 1 si detecte
 int test_capt(char capt_adress){
-	if((P1IN & capt_adress) == capt_adress)
+	if((P1IN & capt_adress) == 0)
 		return 1;
 	else
 		return 0;
@@ -25,10 +25,3 @@ void reset_capt(char capt_adress){
 	P1IFG &= ~(capt_adress);
 }
 
-// Retourne 1 si In --> 1
-int test_direct(char capt_adress){
-	if((P1IN & capt_adress) == capt_adress)
-		return 0;
-	else
-		return 1;
-}

@@ -33,10 +33,10 @@ void init_ports(void){
 	P1IE |= (CAPTEUR_OBSTACLE); // Capteur Obstacle
 
 	// Define front
-	P1IES |= CAPTEUR_BLANCHE_GAUCHE; // Font descendant
-	P1IES |= CAPTEUR_BLANCHE_CENTRE; // Font descendant
-	P1IES |= CAPTEUR_BLANCHE_DROIT; // Font descendant
-	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
+	P1IES &= ~CAPTEUR_BLANCHE_GAUCHE; // Font descendant
+	P1IES &= ~CAPTEUR_BLANCHE_CENTRE; // Font descendant
+	P1IES &= ~CAPTEUR_BLANCHE_DROIT; // Font descendant
+	P1IES &= ~CAPTEUR_OBSTACLE; // Font descendant
 
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
@@ -45,9 +45,9 @@ void init_ports(void){
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
 
 	// Optocoupleur
-	P2IE |= BIT0 | BIT3; // activation de l'interruption
+	/*P2IE |= BIT0 | BIT3; // activation de l'interruption
 	P2IES &= ~BIT0 | ~BIT3; // Detection sur front montant
-	P2IFG &= ~BIT0 | ~BIT3; // Flag à 0
+	P2IFG &= ~BIT0 | ~BIT3; // Flag à 0*/
 }
 
 void init_pwm(){
@@ -59,11 +59,38 @@ void init_pwm(){
 	TA1CCR0 = 4000;
 }
 
+/**
+ * Move
+ */
 void start(){
 	TA1CCR1 = MOTEUR_GAUCHE_PWM;
 	TA1CCR2 = MOTEUR_DROIT_PWM;
-
 	set_sens_avant();
+}
+void stop(){
+	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
+}
+
+void left(){
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	P2OUT 	|= ROUE_GAUCHE;
+	P2OUT 	|= ROUE_DROITE;
+}
+
+void right(){
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	P2OUT 	&=~ ROUE_GAUCHE;
+	P2OUT 	&=~ ROUE_DROITE;
+}
+
+void left90(){
+
+}
+
+void right90(){
+
 }
 
 int main(void){
@@ -79,10 +106,11 @@ int main(void){
 
 	__enable_interrupt();
 	while(1){
-		/*if(!test_direct(CAPTEUR_BLANCHE_CENTRE)){
-			stop(engine_left, engine_right);
-		}*/
-		start();
+		switch (*engine){
+		case ENGINE_RIGHT:	right();break;
+		case ENGINE_LEFT:	left();break;
+		default:			start();break;
+		}
 	}
 }
 
@@ -92,16 +120,16 @@ int main(void){
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
 	// Ligne centrale
-	/*if(!test_direct(CAPTEUR_BLANCHE_CENTRE)){
-		stop(engine_left, engine_right);
+	/*if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
+		P1OUT |= LED1;
 	}
 
 	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		//stop(engine_left, engine_right);
-	}
+	}*/
 
-	// Gauche
+	/*// Gauche
 	if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		P1OUT |= LED1;
 	}
@@ -116,16 +144,16 @@ __interrupt void PORT1_ISR(void) {
 	 */
 
 	// Ligne extérieure + !centre = Repositionnement
-	/*if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
+	if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement à gauche
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
-			//*engine_sens = SENS_GAUCHE;
+			*engine = ENGINE_LEFT;
 		}
 		// repositionnement à droite
 		if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
-			//*engine_sens = SENS_DROITE;
+			*engine = ENGINE_RIGHT;
 		}
-	}*/
+	}
 	// Ligne extérieure droite + milieu + !gauche --> intersection à droite
 	/*else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == DROITE){

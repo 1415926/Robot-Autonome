@@ -14,8 +14,8 @@
 #define LED2 BIT6
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
-#define TURN_VALUE 100
-#define COUNTER_VALUE (PWM_PERIOD * 2)
+#define ENGINE_RIGHT 1
+#define ENGINE_LEFT 2
 
 // includes
 #include <msp430g2553.h>
@@ -27,9 +27,15 @@
 void init_ports(void);
 void init_pwm(void);
 void start(void);
+void stop(void);
+void left(void);
+void right(void);
+void left90(void);
+void right90(void);
 int main(void);
 
 // vars
 int *next_inter_side;
 int *circuit_index;
+int *engine;
 #endif

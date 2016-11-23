@@ -15,9 +15,6 @@
 #define ROUE_DROITE BIT5
 #define MOTEUR_GAUCHE_PWM 3935
 #define MOTEUR_DROIT_PWM 4000
-#define SENS_AVANT 1
-#define SENS_DROITE 2
-#define SENS_GAUCHE 3
 
 //prototypes
 void init_move();
