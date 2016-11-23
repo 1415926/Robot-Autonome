@@ -12,6 +12,7 @@
 #define MAIN_PARAM 1
 #define LED1 BIT0
 #define LED2 BIT6
+#define LED3 BIT7
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
 #define ENGINE_RIGHT 1

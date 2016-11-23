@@ -15,7 +15,7 @@ void init_ports(void){
 
 	// PDIR
 	//P1DIR
-	P1DIR |= (LED1 | LED2);
+	P1DIR |= (LED1 | LED2 | LED3);
 	P1OUT &= ~(LED1 | LED2);
 	//P2DIR
 	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
@@ -109,7 +109,7 @@ int main(void){
 		switch (*engine){
 		case ENGINE_RIGHT:	right();break;
 		case ENGINE_LEFT:	left();break;
-		default:			start();break;
+		//default:			break;
 		}
 	}
 }
@@ -120,29 +120,34 @@ int main(void){
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
 	// Ligne centrale
-	/*if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
-		P1OUT |= LED1;
+	if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
+		P1OUT |= LED3;
+	}else{
+		P1OUT &=~ LED3;
 	}
 
-	// Capteur obstacle test
+	/*// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		//stop(engine_left, engine_right);
 	}*/
 
-	/*// Gauche
+	// Gauche
 	if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		P1OUT |= LED1;
+	}else{
+		P1OUT &=~ LED1;
 	}
 
 	//Droite
 	if(test_capt(CAPTEUR_BLANCHE_DROIT)){
 		P1OUT |= LED2;
-	}*/
+	}else{
+		P1OUT &=~ LED2;
+	}
 
 	/**
 	 * Perte ligne centrale
 	 */
-
 	// Ligne extérieure + !centre = Repositionnement
 	if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement à gauche
