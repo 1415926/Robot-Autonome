@@ -17,7 +17,6 @@
 #define MOTEUR_DROIT_PWM 4000
 
 //prototypes
-void init_move();
 void set_sens_avant();
 
 #endif

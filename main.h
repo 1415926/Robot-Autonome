@@ -31,11 +31,8 @@
 // Prototypes
 void init_ports(void);
 void init_pwm(void);
-void start(void);
-void motor(void);
+void start(int roue_right, int roue_left);
 void stop(void);
-void left(void);
-void right(void);
 void left90(void);
 void right90(void);
 int main(void);
@@ -44,4 +41,6 @@ int main(void);
 int *next_inter_side;
 int *circuit_index;
 int engine;
+int roue_left;
+int roue_right;
 #endif
