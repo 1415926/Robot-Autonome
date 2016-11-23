@@ -13,10 +13,14 @@
 #define LED1 BIT0
 #define LED2 BIT6
 #define LED3 BIT7
+#define LED4 BIT5
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
 #define ENGINE_RIGHT 1
 #define ENGINE_LEFT 2
+#define ENGINE_CORRECT_RIGHT 3
+#define ENGINE_CORRECT_LEFT 4
+#define ENGINE_STRAIGHT 5
 
 // includes
 #include <msp430g2553.h>
@@ -28,6 +32,7 @@
 void init_ports(void);
 void init_pwm(void);
 void start(void);
+void motor(void);
 void stop(void);
 void left(void);
 void right(void);
@@ -38,5 +43,5 @@ int main(void);
 // vars
 int *next_inter_side;
 int *circuit_index;
-int *engine;
+int engine;
 #endif

@@ -15,8 +15,8 @@ void init_ports(void){
 
 	// PDIR
 	//P1DIR
-	P1DIR |= (LED1 | LED2 | LED3);
-	P1OUT &= ~(LED1 | LED2);
+	P1DIR |= (LED1 | LED2 | LED3 | LED4);
+	P1OUT &= ~(LED1 | LED2 | LED3 | LED4);
 	//P2DIR
 	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
 	P2OUT &= ~(BIT1 | BIT2 | BIT4 | BIT5);
@@ -62,27 +62,16 @@ void init_pwm(){
 /**
  * Move
  */
-void start(){
+void motor(){
 	TA1CCR1 = MOTEUR_GAUCHE_PWM;
 	TA1CCR2 = MOTEUR_DROIT_PWM;
+}
+void start(){
+	motor();
 	set_sens_avant();
 }
 void stop(){
 	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
-}
-
-void left(){
-	TA1CCR1 = MOTEUR_GAUCHE_PWM;
-	TA1CCR2 = MOTEUR_DROIT_PWM;
-	P2OUT 	|= ROUE_GAUCHE;
-	P2OUT 	|= ROUE_DROITE;
-}
-
-void right(){
-	TA1CCR1 = MOTEUR_GAUCHE_PWM;
-	TA1CCR2 = MOTEUR_DROIT_PWM;
-	P2OUT 	&=~ ROUE_GAUCHE;
-	P2OUT 	&=~ ROUE_DROITE;
 }
 
 void left90(){
@@ -106,10 +95,13 @@ int main(void){
 
 	__enable_interrupt();
 	while(1){
-		switch (*engine){
-		case ENGINE_RIGHT:	right();break;
-		case ENGINE_LEFT:	left();break;
-		//default:			break;
+		switch (engine){
+		case ENGINE_RIGHT:			right90();break;
+		case ENGINE_LEFT:			left90();break;
+		case ENGINE_STRAIGHT:		start();break;
+		case ENGINE_CORRECT_RIGHT:  rotation_right();break;
+		case ENGINE_CORRECT_LEFT:  	rotation_left();break;
+		default:					start();break;
 		}
 	}
 }
@@ -126,10 +118,13 @@ __interrupt void PORT1_ISR(void) {
 		P1OUT &=~ LED3;
 	}
 
-	/*// Capteur obstacle test
+	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		//stop(engine_left, engine_right);
-	}*/
+		stop();
+		P1OUT |= LED4;
+	}else{
+		P1OUT &=~ LED4;
+	}
 
 	// Gauche
 	if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
@@ -152,48 +147,48 @@ __interrupt void PORT1_ISR(void) {
 	if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement à gauche
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
-			*engine = ENGINE_LEFT;
+			engine = ENGINE_CORRECT_LEFT;
 		}
 		// repositionnement à droite
 		if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
-			*engine = ENGINE_RIGHT;
+			engine = ENGINE_CORRECT_RIGHT;
 		}
 	}
 	// Ligne extérieure droite + milieu + !gauche --> intersection à droite
-	/*else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == DROITE){
-			// TODO : On tourne à droite
+			engine = ENGINE_RIGHT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
-			// TODO : On continue d'avancer
+			engine = ENGINE_STRAIGHT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
-	}*/
-	/*// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
+	}
+	// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
 	else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == GAUCHE){
-			// TODO : On tourne à gauche
+			engine = ENGINE_LEFT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
-			// TODO : On continue d'avancer
+			engine = ENGINE_STRAIGHT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
-	}*/
-	/*// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
+	}
+	// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
 	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 		if(*next_inter_side == GAUCHE){
-			// TODO : On tourne à gauche
+			engine = ENGINE_LEFT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == DROITE){
-			// TODO : On tourne à droite
+			engine = ENGINE_RIGHT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}else if(*next_inter_side == AVANCE){
-			// TODO : On continue d'avancer
+			engine = ENGINE_STRAIGHT;
 			get_next_inter(circuit_index, next_inter_side, get_circuit());
 		}
-	}*/
-	/*reset_capt(CAPTEUR_BLANCHE_CENTRE);
+	}
+	reset_capt(CAPTEUR_BLANCHE_CENTRE);
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
-	reset_capt(CAPTEUR_OBSTACLE);*/
+	reset_capt(CAPTEUR_OBSTACLE);
 }
