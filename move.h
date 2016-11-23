@@ -15,8 +15,6 @@
 #define ROUE_DROITE BIT5
 #define MOTEUR_GAUCHE_PWM 3935
 #define MOTEUR_DROIT_PWM 4000
-
-//prototypes
-void set_sens_avant();
+#define TURN_PWM MOTEUR_DROIT_PWM/1.15
 
 #endif

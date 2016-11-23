@@ -36,7 +36,7 @@ void init_ports(void){
 	P1IES &= ~CAPTEUR_BLANCHE_GAUCHE; // Font descendant
 	P1IES &= ~CAPTEUR_BLANCHE_CENTRE; // Font descendant
 	P1IES &= ~CAPTEUR_BLANCHE_DROIT; // Font descendant
-	P1IES &= ~CAPTEUR_OBSTACLE; // Font descendant
+	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
 
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
@@ -71,12 +71,46 @@ void stop(){
 }
 
 void left90(){
-
+	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+	__delay_cycles(50);
 }
 
 void right90(){
 
 }
+void set_sens_avant(){
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+}
+
+
+/**
+ * GPS
+ */
+// Associe le tableau du circuit a celui choisi
+const int * get_circuit(void){
+	switch(MAIN_PARAM){
+		case 1:  return C1;
+		case 2:  return C2;
+		case 3:  return C3;
+		case 4:  return C4;
+		case 5:  return C5;
+		case 6:  return C6;
+		case 7:  return C7;
+		case 8:  return C8;
+		case 9:  return C9;
+		case 10: return C10;
+		case 11: return C11;
+		case 12: return C12;
+		default: return 0;
+	}
+}
+
+// retourne le nombre d'intersection attendue
+int get_next_inter(int index, const int * circuit){
+	return circuit[index+1];
+}
+
 
 int main(void){
 	/**
@@ -90,7 +124,8 @@ int main(void){
 	set_sens_avant();
 
 	// INIT circuit
-	//get_next_inter(circuit_index, next_inter_side, get_circuit());
+	circuit_index	= 0;
+	next_inter_side = get_next_inter(circuit_index, get_circuit());
 
 	__enable_interrupt();
 	while(1){
@@ -132,9 +167,9 @@ int main(void){
 		case ENGINE_LEFT:			left90();break;
 		case ENGINE_STRAIGHT:		start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 									break;
-		case ENGINE_CORRECT_RIGHT:  start(MOTEUR_DROIT_PWM/1.2, MOTEUR_GAUCHE_PWM);
+		case ENGINE_CORRECT_RIGHT:  start(TURN_PWM, MOTEUR_GAUCHE_PWM);
 									break;
-		case ENGINE_CORRECT_LEFT:  	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM/1.2);
+		case ENGINE_CORRECT_LEFT:  	start(MOTEUR_DROIT_PWM, TURN_PWM);
 									break;
 		default:					start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 									break;
@@ -167,42 +202,49 @@ __interrupt void PORT1_ISR(void) {
 		if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
 			engine = ENGINE_CORRECT_RIGHT;
 		}
-	}else{
-		engine = ENGINE_STRAIGHT;
 	}
-	/*// Ligne extérieure droite + milieu + !gauche --> intersection à droite
+	// Ligne extérieure droite + milieu + !gauche --> intersection à droite
 	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE)){
-		if(*next_inter_side == DROITE){
+		if(next_inter_side == DROITE){
 			engine = ENGINE_RIGHT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
-		}else if(*next_inter_side == AVANCE){
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
+		}else if(next_inter_side == AVANCE){
 			engine = ENGINE_STRAIGHT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
+			get_next_inter(circuit_index, get_circuit());
+			 circuit_index++;
 		}
 	}
 	// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
 	else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
-		if(*next_inter_side == GAUCHE){
+		if(next_inter_side == GAUCHE){
 			engine = ENGINE_LEFT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
-		}else if(*next_inter_side == AVANCE){
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
+		}else if(next_inter_side == AVANCE){
 			engine = ENGINE_STRAIGHT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
 		}
 	}
 	// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
 	else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE)){
-		if(*next_inter_side == GAUCHE){
+		if(next_inter_side == GAUCHE){
 			engine = ENGINE_LEFT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
-		}else if(*next_inter_side == DROITE){
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
+		}else if(next_inter_side == DROITE){
 			engine = ENGINE_RIGHT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
-		}else if(*next_inter_side == AVANCE){
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
+		}else if(next_inter_side == AVANCE){
 			engine = ENGINE_STRAIGHT;
-			//get_next_inter(circuit_index, next_inter_side, get_circuit());
+			get_next_inter(circuit_index, get_circuit());
+			circuit_index++;
 		}
-	}*/
+	}else{
+		engine = ENGINE_STRAIGHT;
+	}
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);

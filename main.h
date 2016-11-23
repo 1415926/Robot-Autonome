@@ -35,12 +35,15 @@ void start(int roue_right, int roue_left);
 void stop(void);
 void left90(void);
 void right90(void);
+int get_next_inter(int index, const int * circuit);
+const int * get_circuit(void);
+void set_sens_avant();
 int main(void);
 
 // vars
-int *next_inter_side;
-int *circuit_index;
 int engine;
 int roue_left;
 int roue_right;
+int circuit_index;
+int next_inter_side;
 #endif
