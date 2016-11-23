@@ -15,7 +15,6 @@
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
 #define TURN_VALUE 100
-#define PWM_PERIOD 100
 #define COUNTER_VALUE (PWM_PERIOD * 2)
 
 // includes
@@ -27,15 +26,10 @@
 // Prototypes
 void init_ports(void);
 void init_pwm(void);
+void start(void);
 int main(void);
 
 // vars
 int *next_inter_side;
 int *circuit_index;
-int increment;
-int *engine_left;
-int *engine_right;
-int *engine_sens;
-int *turn_left;
-int *turn_right;
 #endif
