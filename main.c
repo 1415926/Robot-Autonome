@@ -95,6 +95,39 @@ int main(void){
 
 	__enable_interrupt();
 	while(1){
+
+		/**
+		 * LED
+		 */
+		// Ligne centrale
+		if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
+			P1OUT |= LED3;
+		}else{
+			P1OUT &=~ LED3;
+		}
+
+		// Capteur obstacle test
+		if(test_capt(CAPTEUR_OBSTACLE)){
+			P1OUT |= LED4;
+		}else{
+			P1OUT &=~ LED4;
+		}
+
+		// Gauche
+		if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
+			P1OUT |= LED1;
+		}else{
+			P1OUT &=~ LED1;
+		}
+
+		//Droite
+		if(test_capt(CAPTEUR_BLANCHE_DROIT)){
+			P1OUT |= LED2;
+		}else{
+			P1OUT &=~ LED2;
+		}
+
+		// STATE
 		switch (engine){
 		case ENGINE_RIGHT:			right90();break;
 		case ENGINE_LEFT:			left90();break;
@@ -111,33 +144,9 @@ int main(void){
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-	// Ligne centrale
-	if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
-		P1OUT |= LED3;
-	}else{
-		P1OUT &=~ LED3;
-	}
-
 	// Capteur obstacle test
 	if(test_capt(CAPTEUR_OBSTACLE)){
 		stop();
-		P1OUT |= LED4;
-	}else{
-		P1OUT &=~ LED4;
-	}
-
-	// Gauche
-	if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
-		P1OUT |= LED1;
-	}else{
-		P1OUT &=~ LED1;
-	}
-
-	//Droite
-	if(test_capt(CAPTEUR_BLANCHE_DROIT)){
-		P1OUT |= LED2;
-	}else{
-		P1OUT &=~ LED2;
 	}
 
 	/**
