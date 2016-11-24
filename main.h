@@ -21,6 +21,7 @@
 #define ENGINE_CORRECT_RIGHT 3
 #define ENGINE_CORRECT_LEFT 4
 #define ENGINE_STRAIGHT 5
+#define ENGINE_STOP 6
 
 // includes
 #include <msp430g2553.h>
@@ -37,7 +38,9 @@ void left90(void);
 void right90(void);
 int get_next_inter(int index, const int * circuit);
 const int * get_circuit(void);
-void set_sens_avant();
+void set_sens_straight();
+void set_sens_right();
+void set_sens_left();
 int main(void);
 
 // vars

@@ -22,7 +22,7 @@ void init_ports(void){
 	P2OUT &= ~(BIT1 | BIT2 | BIT4 | BIT5);
 
 	// PSEL
-	P2SEL |= (BIT2|BIT4);
+	P2SEL |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
 	/*P2SEL |= (MOTEUR_GAUCHE | MOTEUR_DROIT);
 	P2SEL2|= (MOTEUR_GAUCHE | MOTEUR_DROIT);*/
 
@@ -63,23 +63,44 @@ void init_pwm(){
  * Move
  */
 void start(int roue_right, int roue_left){
+	TAIFG &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	set_sens_straight();
 	TA1CCR1 = roue_right;
 	TA1CCR2 = roue_left;
 }
 void stop(){
-	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
+	TAIFG |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	//P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
 }
 
 void left90(){
+	stop();
+	set_sens_left();
+	P2OUT |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	__delay_cycles(500);
 	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-	__delay_cycles(50);
 }
 
 void right90(){
-
+	stop();
+	set_sens_right();
+	P2OUT |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	__delay_cycles(500);
+	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 }
-void set_sens_avant(){
+
+void set_sens_straight(){
 	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+}
+
+void set_sens_right(){
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+}
+
+void set_sens_left(){
+	P2OUT |= (ROUE_GAUCHE); //sens
 	P2OUT |= ROUE_DROITE; //sens
 }
 
@@ -121,14 +142,28 @@ int main(void){
 	engine		= ENGINE_STRAIGHT;
 	roue_left 	= MOTEUR_GAUCHE_PWM;
 	roue_right  = MOTEUR_DROIT_PWM;
-	set_sens_avant();
+	set_sens_straight();
 
 	// INIT circuit
 	circuit_index	= 0;
 	next_inter_side = get_next_inter(circuit_index, get_circuit());
-
+	int test = 1;
 	__enable_interrupt();
 	while(1){
+
+		if(test == 1){
+			engine = ENGINE_STRAIGHT;
+			test++;
+		}else if(test == 2){
+			engine = ENGINE_LEFT;
+			test++;
+		}else if(test == 3){
+			engine = ENGINE_RIGHT;
+			test++;
+		}else if(test == 4){
+			engine = ENGINE_STOP;
+			test = 1;
+		}
 
 		/**
 		 * LED
@@ -147,7 +182,7 @@ int main(void){
 			P1OUT &=~ LED4;
 		}
 
-		// Gauche
+		/*// Gauche
 		if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
 			P1OUT |= LED1;
 		}else{
@@ -159,12 +194,13 @@ int main(void){
 			P1OUT |= LED2;
 		}else{
 			P1OUT &=~ LED2;
-		}
+		}*/
 
 		// STATE
 		switch (engine){
 		case ENGINE_RIGHT:			right90();break;
 		case ENGINE_LEFT:			left90();break;
+		case ENGINE_STOP:			stop();break;
 		case ENGINE_STRAIGHT:		start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 									break;
 		case ENGINE_CORRECT_RIGHT:  start(TURN_PWM, MOTEUR_GAUCHE_PWM);
@@ -193,7 +229,7 @@ __interrupt void PORT1_ISR(void) {
 	 * Perte ligne centrale
 	 */
 	// Ligne extérieure + !centre = Repositionnement
-	if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
+	/*if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		// repositionnement à gauche
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
 			engine = ENGINE_CORRECT_LEFT;
@@ -248,5 +284,5 @@ __interrupt void PORT1_ISR(void) {
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
-	reset_capt(CAPTEUR_OBSTACLE);
+	reset_capt(CAPTEUR_OBSTACLE);*/
 }
