@@ -1,1 +1,1 @@
-"./capteur.obj" "./gps.obj" "./main.obj" "./move.obj" "../lnk_msp430g2533.cmd" -llibc.a 
+"./capteur.obj" "./main.obj" "../lnk_msp430g2533.cmd" -llibc.a 

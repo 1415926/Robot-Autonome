@@ -63,30 +63,22 @@ void init_pwm(){
  * Move
  */
 void start(int roue_right, int roue_left){
-	TAIFG &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	//TAIFG &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 	set_sens_straight();
 	TA1CCR1 = roue_right;
 	TA1CCR2 = roue_left;
 }
 void stop(){
-	TAIFG |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+	//TAIFG |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
 	//P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
 }
 
 void left90(){
-	stop();
-	set_sens_left();
-	P2OUT |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
-	__delay_cycles(500);
-	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+	start(MOTEUR_DROIT_PWM, 0);
 }
 
 void right90(){
-	stop();
-	set_sens_right();
-	P2OUT |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
-	__delay_cycles(500);
-	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+	start(0, MOTEUR_GAUCHE_PWM);
 }
 
 void set_sens_straight(){
@@ -147,15 +139,20 @@ int main(void){
 	// INIT circuit
 	circuit_index	= 0;
 	next_inter_side = get_next_inter(circuit_index, get_circuit());
-	int test = 1;
 	__enable_interrupt();
 	while(1){
 
-		if(test == 1){
-			engine = ENGINE_STRAIGHT;
-			test++;
-		}else if(test == 2){
+		if(TA1CCR0 < 3000){
 			engine = ENGINE_LEFT;
+			P1OUT |= LED1;
+			P1OUT &=~ LED2;
+		}else{
+			engine = ENGINE_STRAIGHT;
+			P1OUT |= LED2;
+			P1OUT &=~ LED1;
+		}
+			/*else if(test == 2){
+			engine = ENGINE_STRAIGHT;
 			test++;
 		}else if(test == 3){
 			engine = ENGINE_RIGHT;
@@ -163,7 +160,7 @@ int main(void){
 		}else if(test == 4){
 			engine = ENGINE_STOP;
 			test = 1;
-		}
+		}*/
 
 		/**
 		 * LED
@@ -213,8 +210,6 @@ int main(void){
 	}
 }
 
-
-
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
@@ -222,7 +217,7 @@ __interrupt void PORT1_ISR(void) {
 	 * OBSTACLE
 	 */
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		//stop();
+		stop();
 	}
 
 	/**

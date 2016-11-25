@@ -11,9 +11,7 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./capteur.obj" \
-"./gps.obj" \
 "./main.obj" \
-"./move.obj" \
 "../lnk_msp430g2533.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -155,8 +153,8 @@ Robot_Autonome.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)$(BIN_OUTPUTS__QUOTED)
-	-$(RM) "capteur.d" "gps.d" "main.d" "move.d" 
-	-$(RM) "capteur.obj" "gps.obj" "main.obj" "move.obj" 
+	-$(RM) "capteur.d" "main.d" 
+	-$(RM) "capteur.obj" "main.obj" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
