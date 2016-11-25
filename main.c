@@ -66,12 +66,12 @@ void stop(){
 }
 
 void left90(void){
-    do{
+	do{
 		P2OUT	|= (ROUE_GAUCHE);
-    	P2OUT	|= (MOTEUR_DROIT|ROUE_DROITE);
-    	P2OUT	&=~ (MOTEUR_GAUCHE);
-	}while((test_capt(CAPTEUR_BLANCHE_CENTRE)));
-    P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
+		P2OUT	|= (MOTEUR_DROIT|ROUE_DROITE);
+		P2OUT	&=~ (MOTEUR_GAUCHE);
+	}while(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE));
+	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 }
 
 void right90(void){
@@ -79,7 +79,7 @@ void right90(void){
 	    P2OUT	|=  (MOTEUR_GAUCHE);
 	    P2OUT	&=~ (ROUE_GAUCHE|ROUE_DROITE);
 	    P2OUT	&=~ (MOTEUR_DROIT);
-	}while((test_capt(CAPTEUR_BLANCHE_CENTRE)));
+	}while(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE));
 	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 }
 
@@ -210,9 +210,9 @@ __interrupt void PORT1_ISR(void) {
 		// repositionnement à gauche
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
 			engine = ENGINE_CORRECT_LEFT;
-		}
+		}else{
 		// repositionnement à droite
-		if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
+		//if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
 			engine = ENGINE_CORRECT_RIGHT;
 		}
 	}else{
@@ -262,9 +262,10 @@ __interrupt void PORT1_ISR(void) {
 			}*/
 
 		// TOUT à zéro
-		}else if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			engine = ENGINE_STOP;
 		}
+		/*}else if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+			engine = ENGINE_STOP;
+		}*/
 	}
 
 	if(engine == 0){
