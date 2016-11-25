@@ -67,16 +67,18 @@ void stop(){
 
 void left90(void){
     do{
-		P2OUT|= (MOTEUR_GAUCHE|ROUE_GAUCHE);
-    	P2OUT|= (MOTEUR_DROIT|ROUE_DROITE);
+		P2OUT	|= (ROUE_GAUCHE);
+    	P2OUT	|= (MOTEUR_DROIT|ROUE_DROITE);
+    	P2OUT	&=~ (MOTEUR_GAUCHE);
 	}while((test_capt(CAPTEUR_BLANCHE_CENTRE)));
     P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 }
 
 void right90(void){
 	do{
-	    P2OUT|=(MOTEUR_GAUCHE|MOTEUR_DROIT);
-	    P2OUT&=~(ROUE_GAUCHE|ROUE_DROITE);
+	    P2OUT	|=  (MOTEUR_GAUCHE);
+	    P2OUT	&=~ (ROUE_GAUCHE|ROUE_DROITE);
+	    P2OUT	&=~ (MOTEUR_DROIT);
 	}while((test_capt(CAPTEUR_BLANCHE_CENTRE)));
 	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 }
@@ -216,7 +218,8 @@ __interrupt void PORT1_ISR(void) {
 	}else{
 		// Ligne extérieure droite + milieu + !gauche --> intersection à droite
 		if (test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			if(next_inter_side == DROITE){
+			engine = ENGINE_RIGHT;
+			/*if(next_inter_side == DROITE){
 				engine = ENGINE_RIGHT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
@@ -224,12 +227,13 @@ __interrupt void PORT1_ISR(void) {
 				engine = ENGINE_STRAIGHT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				 circuit_index++;
-			}
+			}*/
 		}
 
 		// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
 		else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			if(next_inter_side == GAUCHE){
+			engine = ENGINE_LEFT;
+			/*if(next_inter_side == GAUCHE){
 				engine = ENGINE_LEFT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
@@ -237,12 +241,13 @@ __interrupt void PORT1_ISR(void) {
 				engine = ENGINE_STRAIGHT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
-			}
+			}*/
 		}
 
 		// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
 		else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			if(next_inter_side == GAUCHE){
+			engine = ENGINE_LEFT;
+			/*if(next_inter_side == GAUCHE){
 				engine = ENGINE_LEFT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
@@ -254,11 +259,11 @@ __interrupt void PORT1_ISR(void) {
 				engine = ENGINE_STRAIGHT;
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
-			}
+			}*/
 		}
 
 		// Tout à zéro
-		if(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+		if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
 			engine = ENGINE_STOP;
 		}
 	}
