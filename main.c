@@ -23,8 +23,6 @@ void init_ports(void){
 
 	// PSEL
 	P2SEL |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
-	/*P2SEL |= (MOTEUR_GAUCHE | MOTEUR_DROIT);
-	P2SEL2|= (MOTEUR_GAUCHE | MOTEUR_DROIT);*/
 
 	// Interruptions enable
 	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
@@ -36,18 +34,13 @@ void init_ports(void){
 	P1IES &= ~CAPTEUR_BLANCHE_GAUCHE; // Font descendant
 	P1IES &= ~CAPTEUR_BLANCHE_CENTRE; // Font descendant
 	P1IES &= ~CAPTEUR_BLANCHE_DROIT; // Font descendant
-	P1IES |= CAPTEUR_OBSTACLE; // Font descendant
+	P1IES &= ~CAPTEUR_OBSTACLE; // Font descendant
 
 	// Reset des flags
 	P1IFG &= ~(CAPTEUR_BLANCHE_GAUCHE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_DROIT);
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
-
-	// Optocoupleur
-	/*P2IE |= BIT0 | BIT3; // activation de l'interruption
-	P2IES &= ~BIT0 | ~BIT3; // Detection sur front montant
-	P2IFG &= ~BIT0 | ~BIT3; // Flag à 0*/
 }
 
 void init_pwm(){
@@ -63,14 +56,13 @@ void init_pwm(){
  * Move
  */
 void start(int roue_right, int roue_left){
-	//TAIFG &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
 	set_sens_straight();
 	TA1CCR1 = roue_right;
 	TA1CCR2 = roue_left;
 }
+
 void stop(){
-	//TAIFG |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
-	//P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_GAUCHE);
+	start(0,0);
 }
 
 void left90(void){
@@ -205,7 +197,7 @@ __interrupt void PORT1_ISR(void) {
 	 * OBSTACLE
 	 */
 	if(test_capt(CAPTEUR_OBSTACLE)){
-		stop();
+		//engine = ENGINE_STOP;
 	}
 
 	/**
@@ -221,49 +213,53 @@ __interrupt void PORT1_ISR(void) {
 		if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
 			engine = ENGINE_CORRECT_RIGHT;
 		}
-	}
-
-
-	// Ligne extérieure droite + milieu + !gauche --> intersection à droite
-	if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-		if(next_inter_side == DROITE){
-			engine = ENGINE_RIGHT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
-		}else if(next_inter_side == AVANCE){
-			engine = ENGINE_STRAIGHT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			 circuit_index++;
+	}else{
+		// Ligne extérieure droite + milieu + !gauche --> intersection à droite
+		if (test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+			if(next_inter_side == DROITE){
+				engine = ENGINE_RIGHT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}else if(next_inter_side == AVANCE){
+				engine = ENGINE_STRAIGHT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				 circuit_index++;
+			}
 		}
-	}
 
-	// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
-	if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-		if(next_inter_side == GAUCHE){
-			engine = ENGINE_LEFT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
-		}else if(next_inter_side == AVANCE){
-			engine = ENGINE_STRAIGHT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
+		// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
+		else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+			if(next_inter_side == GAUCHE){
+				engine = ENGINE_LEFT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}else if(next_inter_side == AVANCE){
+				engine = ENGINE_STRAIGHT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}
 		}
-	}
 
-	// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
-	if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-		if(next_inter_side == GAUCHE){
-			engine = ENGINE_LEFT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
-		}else if(next_inter_side == DROITE){
-			engine = ENGINE_RIGHT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
-		}else if(next_inter_side == AVANCE){
-			engine = ENGINE_STRAIGHT;
-			next_inter_side = get_next_inter(circuit_index, get_circuit());
-			circuit_index++;
+		// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
+		else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+			if(next_inter_side == GAUCHE){
+				engine = ENGINE_LEFT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}else if(next_inter_side == DROITE){
+				engine = ENGINE_RIGHT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}else if(next_inter_side == AVANCE){
+				engine = ENGINE_STRAIGHT;
+				next_inter_side = get_next_inter(circuit_index, get_circuit());
+				circuit_index++;
+			}
+		}
+
+		// Tout à zéro
+		if(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+			engine = ENGINE_STOP;
 		}
 	}
 
