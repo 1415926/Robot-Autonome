@@ -198,15 +198,15 @@ __interrupt void PORT1_ISR(void) {
 	/**
 	 * OBSTACLE
 	 */
-	if(test_capt(CAPTEUR_OBSTACLE)){
-		//engine = ENGINE_STOP;
+	if(!test_capt(CAPTEUR_OBSTACLE)){
+		engine = ENGINE_STOP;
 	}
 
 	/**
 	 * Perte ligne centrale
 	 */
 	// Ligne extérieure + !centre = Repositionnement
-	if(!test_capt(CAPTEUR_BLANCHE_CENTRE)){
+	if(!test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
 		// repositionnement à gauche
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
 			engine = ENGINE_CORRECT_LEFT;
@@ -260,10 +260,9 @@ __interrupt void PORT1_ISR(void) {
 				next_inter_side = get_next_inter(circuit_index, get_circuit());
 				circuit_index++;
 			}*/
-		}
 
-		// Tout à zéro
-		if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
+		// TOUT à zéro
+		}else if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
 			engine = ENGINE_STOP;
 		}
 	}
