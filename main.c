@@ -232,57 +232,6 @@ __interrupt void PORT1_ISR(void) {
 		//if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
 			engine = ENGINE_CORRECT_RIGHT;
 		}
-	}else if(engine == 0){
-		// Ligne extérieure droite + milieu + !gauche --> intersection à droite
-		if (test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			engine = ENGINE_RIGHT;
-			/*if(next_inter_side == DROITE){
-				engine = ENGINE_RIGHT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}else if(next_inter_side == AVANCE){
-				engine = ENGINE_STRAIGHT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				 circuit_index++;
-			}*/
-		}
-
-		// Ligne extérieure gauche + milieu + !droite --> intersection à gauche
-		else if (!test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			engine = ENGINE_LEFT;
-			/*if(next_inter_side == GAUCHE){
-				engine = ENGINE_LEFT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}else if(next_inter_side == AVANCE){
-				engine = ENGINE_STRAIGHT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}*/
-		}
-
-		// Ligne extérieure gauche & droite + milieu --> intersection à gauche et à droite
-		else if (test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			engine = ENGINE_LEFT;
-			/*if(next_inter_side == GAUCHE){
-				engine = ENGINE_LEFT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}else if(next_inter_side == DROITE){
-				engine = ENGINE_RIGHT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}else if(next_inter_side == AVANCE){
-				engine = ENGINE_STRAIGHT;
-				next_inter_side = get_next_inter(circuit_index, get_circuit());
-				circuit_index++;
-			}*/
-		}
-
-		// TOUT à zéro
-		/*}else if(!test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE) && engine == 0){
-			engine = ENGINE_STOP;
-		}*/
 	}
 
 	if(engine == 0){
