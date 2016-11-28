@@ -1,30 +1,24 @@
-/*
- * 	Project App Robot
- * 	Author : Paul Bouquet
- * 	Name : main.c
- * 	Version : 2.0
- * 	Date : 15/11/2016
- * 	Functions :
-*/
-
 #include "main.h"
 
-// Initialise tous les ports utiles
-void init_ports(void){
-	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+/*
+ * main.c
+ */
+int main(void) {
+    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
-	// PDIR
-	//P1DIR
-	P1DIR |= (LED1 | LED2 | LED3 | LED4);
-	P1OUT &= ~(LED1 | LED2 | LED3 | LED4);
-	//P2DIR
-	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
-	P2OUT &= ~(BIT1 | BIT2 | BIT4 | BIT5);
+    //Init led and moteur-------------------------------
 
-	// PSEL
-	P2SEL |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+    //P1DIR
+    P1DIR |= (LED1 | LED2 | LED3 | LED4);
+   	P1OUT &= ~(LED1 | LED2 | LED3 | LED4);
+   	//P2DIR
+   	P2DIR |= (BIT1 | BIT2 | BIT4 | BIT5);
+   	P2OUT &= ~(BIT1 | BIT2 | BIT4 | BIT5);
+   	//P2SEL
+   	P2SEL |= (MOTEUR_GAUCHE|MOTEUR_DROIT);
+   	//--------------------------------------------------
 
-	// Interruptions enable
+   	// Interruptions enable
 	P1IE |= (CAPTEUR_BLANCHE_GAUCHE); // Capteur Blanche Gauche
 	P1IE |= (CAPTEUR_BLANCHE_CENTRE); // Capteur Blanche Centre
 	P1IE |= (CAPTEUR_BLANCHE_DROIT); // Capteur Blanche Droite
@@ -42,136 +36,270 @@ void init_ports(void){
 	P1IFG &= ~(CAPTEUR_BLANCHE_DROIT);
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
 
-	// Optocoupleur
-	P2IE |= BIT0 | BIT3; // activation de l'interruption
-	P2IES &= ~BIT0 | ~BIT3; // Detection sur front montant
-	P2IFG &= ~BIT0 | ~BIT3; // Flag à 0
-}
+   	//Init pwm------------------------------------------
+   	BCSCTL1 = CALBC1_1MHZ; //Frequence d'horloge 1MHz
+   	DCOCTL = CALDCO_1MHZ; //Frequence d'horloge 1MHz
+   	TA1CTL = TASSEL_2 | MC_1 | ID_0;
+   	TA1CCTL1 = OUTMOD_7;
+   	TA1CCTL2 = OUTMOD_7;
+   	TA1CCR0 = 4000;
+   	//--------------------------------------------------
 
-void init_pwm(){
-	BCSCTL1 = CALBC1_1MHZ; //FrÃ©quence d'horloge 1MHz
-	DCOCTL = CALDCO_1MHZ; //FrÃ©quence d'horloge 1MHz
-	TA1CTL = TASSEL_2 | MC_1 | ID_0;
-	TA1CCTL1 = OUTMOD_7;
-	TA1CCTL2 = OUTMOD_7;
-	TA1CCR0 = 4000;
-}
+   	//Allumer led verte---------------------------------
+   	P1OUT &= ~(BIT0);
+   	P1OUT |= (BIT6);
+   	//--------------------------------------------------
+   	// Banque + Hopital + Maison
+   	//-------------------------------------------------------------------
 
-/**
- * Move
- */
-void start(int roue_right, int roue_left){
-	TA1CCR1 = roue_right;
-	TA1CCR2 = roue_left;
-}
+   	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
 
-void stop(){
-	start(0,0);
-}
+   	__delay_cycles(EXCEL_732 + EXCEL_311);
 
+   	//Stop----------------------------------------------
+   	TA1CCR1 = 0;
+   	TA1CCR2 = 0;
+   	//--------------------------------------------------
 
-void set_sens_straight(){
+   	//Tourner gauche------------------------------------
+   	P2OUT |= ROUE_GAUCHE; //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER);
+   	//--------------------------------------------------
+
+   	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
+
+   	__delay_cycles(EXCEL_339); // intersection / intersection boulangerie
+
+   	//Tourner gauche------------------------------------
+   	P2OUT |= ROUE_GAUCHE; //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER);
+   	//--------------------------------------------------
+
+   	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
+
+   	__delay_cycles(EXCEL_259 + CIBLE); // intersection banque / banque
+
+   	//Stop----------------------------------------------
+   	TA1CCR1 = 0;
+   	TA1CCR2 = 0;
+   	//--------------------------------------------------
+
+   	__delay_cycles(3000000);
+
+   	//Tourner gauche------------------------------------
+   	P2OUT |= ROUE_GAUCHE; //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER * 2);
+   	//--------------------------------------------------
+
+   	//Avancer-------------------------------------------
 	P2OUT &=~ (ROUE_GAUCHE); //sens
 	P2OUT |= ROUE_DROITE; //sens
-}
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-void set_sens_right(){
+	__delay_cycles(EXCEL_259 + CIBLE);
+
+   	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+   	P2OUT &=~ ROUE_DROITE; //sens
+    TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER);
+   	//--------------------------------------------------
+
+
+   	//Stop----------------------------------------------
+   	TA1CCR1 = 0;
+   	TA1CCR2 = 0;
+   	//--------------------------------------------------
+
+   	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
+
+   	__delay_cycles(EXCEL_339); // banque / banque
+
+   	//Stop----------------------------------------------
+   	TA1CCR1 = 0;
+   	TA1CCR2 = 0;
+   	//--------------------------------------------------
+
+   	//Tourner gauche------------------------------------
+   	P2OUT |= ROUE_GAUCHE; //sens
+   	P2OUT |= ROUE_DROITE; //sens
+    TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER);
+   	//--------------------------------------------------
+
+   	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+  	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+  	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
+
+   	__delay_cycles(EXCEL_266); // intersection maison / banque
+
+   	//Tourner gauche------------------------------------
+   	P2OUT &= ~(ROUE_GAUCHE); //sens
+   	P2OUT &= ~(ROUE_DROITE); //sens
+   	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+   	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+   	__delay_cycles(TOURNER);
+   	//--------------------------------------------------
+
+	//Avancer-------------------------------------------
+   	P2OUT &=~ (ROUE_GAUCHE); //sens
+   	P2OUT |= ROUE_DROITE; //sens
+  	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+  	TA1CCR2 = MOTEUR_DROIT_PWM;
+   	//--------------------------------------------------
+
+  	__delay_cycles(EXCEL_215 + EXCEL_385);
+
+  	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
+
+  	//Tourner droite------------------------------------
 	P2OUT &=~ ROUE_GAUCHE; //sens
 	P2OUT &=~ ROUE_DROITE; //sens
-}
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-void set_sens_left(){
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
+
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
+
+	__delay_cycles(EXCEL_135 + CIBLE);
+
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
+
+	__delay_cycles(3000000);
+
+	//Tourner gauche------------------------------------
 	P2OUT |= ROUE_GAUCHE; //sens
 	P2OUT |= ROUE_DROITE; //sens
-}
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-int temps(int mm){
-	return (mm / VITESSE)/1000000;
-}
+	__delay_cycles(TOURNER * 2);
+	//--------------------------------------------------
 
-/**
- * GPS
- */
-// Associe le tableau du circuit a celui choisi
-const int * get_circuit(void){
-	switch(MAIN_PARAM){
-		case 1:  return C1;
-		case 2:  return C2;
-		case 3:  return C3;
-		case 4:  return C4;
-		case 5:  return C5;
-		case 6:  return C6;
-		case 7:  return C7;
-		case 8:  return C8;
-		case 9:  return C9;
-		case 10: return C10;
-		case 11: return C11;
-		case 12: return C12;
-		default: return 0;
-	}
-}
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-// retourne le nombre d'intersection attendue
-int get_next_action(int index, const int * circuit){
-	return circuit[index];
-}
+	__delay_cycles(EXCEL_135 + CIBLE);
 
-void delay_ms(int milliseconds)
-{
-   while(milliseconds > 0)
-   {
-      milliseconds--;
-       __delay_cycles(990);
-   }
-}
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-int main(void){
-	/**
-	 * INITIALISATION
-	 */
-	init_ports();
-	init_pwm();
-	engine 			= 0;
-	engine_count	= 0;
-	circuit_index	= 0;
+	//Tourner gauche------------------------------------
+	P2OUT &= ~(ROUE_GAUCHE); //sens
+	P2OUT &= ~(ROUE_DROITE); //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-	__enable_interrupt();
-	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-	while(1){
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-		// Parcours
-		if(engine == 0){
-			next_action = get_next_action(circuit_index, get_circuit());
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-			// tourner à gauche
-			if(next_action 		== GAUCHE){
-				set_sens_left();
-				__delay_cycles(425000);
+	__delay_cycles(EXCEL_215 + EXCEL_385);
 
-			// tourner à droite
-			}else if(next_action == DROITE){
-				set_sens_right();
-				__delay_cycles(425000);
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-			// est sur la cible
-			}else if(next_action == CIBLE){
-				engine 			= ENGINE_CIBLE;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-			// stop
-			}else if(next_action == STOP){
-				stop();
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-			// tout droit
-			}else{
-				set_sens_straight();
-				delay_ms(next_action);
-			}
-		}
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-		// reset
-		engine = 0;
-		circuit_index++;
-	}
+	__delay_cycles(EXCEL_732 + EXCEL_311 + EXCEL_266);
+
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
+
+   	//Fin-----------------------------------------------
+   	while(1)
+   	{
+   		P1OUT &= ~(BIT6);
+   		P1OUT |= (BIT0);
+   	}
+   	//--------------------------------------------------
+
+	return 0;
 }
 
 // Interruption capteur
@@ -187,19 +315,30 @@ __interrupt void PORT1_ISR(void) {
 	/**
 	 * Perte ligne centrale
 	 */
-	// Ligne extérieure + !centre = Repositionnement
-	/*if(test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
+	// Ligne extï¿½rieure + !centre = Repositionnement
+	if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
-			// repositionnement à gauche
-			start(MOTEUR_DROIT_PWM, TURN_PWM);
+			// repositionnement ï¿½ gauche
+			TA1CCR2 = TURN_PWM;
 		}else{
-			// repositionnement à droite
-			start(TURN_PWM, MOTEUR_GAUCHE_PWM);
+			// repositionnement ï¿½ droite
+			TA1CCR1 = TURN_PWM;
 		}
 	}
-
-	reset_capt(CAPTEUR_BLANCHE_CENTRE);
-	reset_capt(CAPTEUR_BLANCHE_DROIT);
-	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
-	reset_capt(CAPTEUR_OBSTACLE);*/
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

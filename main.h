@@ -10,48 +10,40 @@
 
 // Paramètres
 #define MAIN_PARAM 1
+#define VITESSE 17.52
+#define MOTEUR_GAUCHE BIT2
+#define MOTEUR_DROIT BIT4
+#define ROUE_GAUCHE BIT1
+#define ROUE_DROITE BIT5
+#define MOTEUR_GAUCHE_PWM 4000
+#define MOTEUR_DROIT_PWM 3950
+#define TURN_PWM MOTEUR_DROIT_PWM/1.07
 #define LED1 BIT0
 #define LED2 BIT6
 #define LED3 BIT7
 #define LED4 BIT5
-#define MOTEUR_STOP 0
-#define MOTEUR_START 1
-#define ENGINE_RIGHT 145
-#define ENGINE_LEFT 2
-#define ENGINE_CORRECT_RIGHT 3
-#define ENGINE_CORRECT_LEFT 4
-#define ENGINE_STRAIGHT 5
-#define ENGINE_STOP 6
-#define ENGINE_CIBLE 7
-#define VITESSE 175.2
+#define TOURNER	400000
+#define EXCEL_732 4178082
+#define EXCEL_311 1775114
+#define EXCEL_617 3521689
+#define EXCEL_177 1010274
+#define EXCEL_280 1598174
+#define EXCEL_998 5696347
+#define EXCEL_301 1718037
+#define EXCEL_135 770548
+#define EXCEL_385 2180365
+#define EXCEL_586 3344749
+#define EXCEL_215 1227169
+#define EXCEL_259 1478311
+#define EXCEL_339 1934932
+#define EXCEL_266 1518265
+#define CIBLE 856164
+
 
 // includes
 #include <msp430g2553.h>
-#include "gps.h"
 #include "capteur.h"
-#include "move.h"
 
 // Prototypes
-void init_ports(void);
-void init_pwm(void);
-void start(int roue_right, int roue_left);
-void straight(int roue_right, int roue_left);
-void stop(void);
-void left90(void);
-void right90(void);
-int get_next_action(int index, const int * circuit);
-const int * get_circuit(void);
-void set_sens_straight(void);
-void set_sens_right(void);
-void set_sens_left(void);
-void delay_ms(int milliseconds);
 int main(void);
-
-// vars
-int engine;
-int engine_count;
-int roue_left;
-int roue_right;
-int circuit_index;
-int next_action;
 #endif
