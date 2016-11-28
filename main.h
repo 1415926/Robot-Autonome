@@ -22,6 +22,7 @@
 #define ENGINE_CORRECT_LEFT 4
 #define ENGINE_STRAIGHT 5
 #define ENGINE_STOP 6
+#define ENGINE_CIBLE 7
 
 // includes
 #include <msp430g2553.h>
@@ -46,6 +47,7 @@ int main(void);
 
 // vars
 int engine;
+int engine_count;
 int roue_left;
 int roue_right;
 int circuit_index;

@@ -77,11 +77,13 @@ void straight(int roue_right, int roue_left){
 void right90(){
 	set_sens_right();
 	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+	__delay_cycles(10000);
 }
 
 void left90(){
 	set_sens_left();
 	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+	__delay_cycles(10000);
 }
 
 void set_sens_straight(){
@@ -135,9 +137,9 @@ int main(void){
 	init_ports();
 	init_pwm();
 	engine 			= 0;
-	// INIT circuit
+	engine_count	= 0;
 	circuit_index	= 0;
-	next_action 	= get_next_action(circuit_index, get_circuit());
+
 	__enable_interrupt();
 	while(1){
 
@@ -151,7 +153,34 @@ int main(void){
 			P1OUT &=~ LED3;
 		}*/
 
-		// STATE
+		// Parcours
+		if(engine == 0 && engine_count == 0){
+			next_action 		= get_next_action(circuit_index, get_circuit());
+
+			// tourner à gauche
+			if(next_action == GAUCHE){
+				engine			= ENGINE_LEFT;
+
+			// tourner à droite
+			}else if(next_action == DROITE){
+				engine 			= ENGINE_RIGHT;
+
+			// est sur la cible
+			}else if(next_action == CIBLE){
+				engine 			= ENGINE_CIBLE;
+
+			// tout droit
+			}else{
+				engine_count 	= next_action;
+				engine 			= ENGINE_STRAIGHT;
+			}
+		}else if((engine == ENGINE_STRAIGHT || engine == ENGINE_CORRECT_LEFT || engine == ENGINE_CORRECT_RIGHT) && engine_count > 0){
+			__delay_cycles(1000);
+			engine_count--;
+		}
+
+
+		// Engine state
 		switch (engine){
 			case ENGINE_RIGHT:			right90();break;
 			case ENGINE_LEFT:			left90();break;
@@ -165,6 +194,10 @@ int main(void){
 			default:					straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 										break;
 		}
+
+		// reset
+		engine = 0;
+		circuit_index++;
 	}
 }
 
