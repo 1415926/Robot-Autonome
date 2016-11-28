@@ -74,12 +74,12 @@ void straight(int roue_right, int roue_left){
 	start(roue_right, roue_left);
 }
 
-void right90(int engine, int engine_count){
+void right90(){
 	set_sens_right();
 	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 }
 
-void left90(int engine, int engine_count){
+void left90(){
 	set_sens_left();
 	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 }
