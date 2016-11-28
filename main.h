@@ -16,7 +16,7 @@
 #define LED4 BIT5
 #define MOTEUR_STOP 0
 #define MOTEUR_START 1
-#define ENGINE_RIGHT 1
+#define ENGINE_RIGHT 145
 #define ENGINE_LEFT 2
 #define ENGINE_CORRECT_RIGHT 3
 #define ENGINE_CORRECT_LEFT 4
@@ -33,9 +33,10 @@
 void init_ports(void);
 void init_pwm(void);
 void start(int roue_right, int roue_left);
+void straight(int roue_right, int roue_left);
 void stop(void);
-void left90(void);
-void right90(void);
+void left90();
+void right90();
 int get_next_inter(int index, const int * circuit);
 const int * get_circuit(void);
 void set_sens_straight();

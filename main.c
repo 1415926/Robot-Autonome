@@ -41,6 +41,11 @@ void init_ports(void){
 	P1IFG &= ~(CAPTEUR_BLANCHE_CENTRE);
 	P1IFG &= ~(CAPTEUR_BLANCHE_DROIT);
 	P1IFG &= ~(CAPTEUR_OBSTACLE);
+
+	// Optocoupleur
+	P2IE |= BIT0 | BIT3; // activation de l'interruption
+	P2IES &= ~BIT0 | ~BIT3; // Detection sur front montant
+	P2IFG &= ~BIT0 | ~BIT3; // Flag à 0
 }
 
 void init_pwm(){
@@ -56,7 +61,6 @@ void init_pwm(){
  * Move
  */
 void start(int roue_right, int roue_left){
-	set_sens_straight();
 	TA1CCR1 = roue_right;
 	TA1CCR2 = roue_left;
 }
@@ -65,40 +69,20 @@ void stop(){
 	start(0,0);
 }
 
-void right90(void){
-	if(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE)){
-		P2OUT|=(MOTEUR_GAUCHE|MOTEUR_DROIT);
-		P2OUT&=~(ROUE_GAUCHE|ROUE_DROITE);
-		__delay_cycles(425000/2);
-		P2OUT&=~(MOTEUR_GAUCHE|MOTEUR_DROIT);
-	}
+void straight(int roue_right, int roue_left){
+	set_sens_straight();
+	start(roue_right, roue_left);
 }
 
-void left90(void){
-	if(test_capt(CAPTEUR_BLANCHE_GAUCHE) && test_capt(CAPTEUR_BLANCHE_CENTRE)){
-		P2OUT|=(MOTEUR_GAUCHE|MOTEUR_DROIT);
-		P2OUT|=(ROUE_GAUCHE|ROUE_DROITE);
-		__delay_cycles(425000/2);
-		P2OUT&=~(MOTEUR_GAUCHE|MOTEUR_DROIT);
-	}
-}
-/*void left90(void){
-	do{
-		P2OUT	|= (ROUE_GAUCHE);
-		P2OUT	|= (MOTEUR_DROIT|ROUE_DROITE);
-		P2OUT	&=~ (MOTEUR_GAUCHE);
-	}while(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE));
-	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
+void right90(int engine, int engine_count){
+	set_sens_right();
+	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 }
 
-void right90(void){
-	do{
-	    P2OUT	|=  (MOTEUR_GAUCHE);
-	    P2OUT	&=~ (ROUE_GAUCHE|ROUE_DROITE);
-	    P2OUT	&=~ (MOTEUR_DROIT);
-	}while(test_capt(CAPTEUR_BLANCHE_DROIT) && test_capt(CAPTEUR_BLANCHE_CENTRE));
-	P2OUT &=~ (MOTEUR_GAUCHE|MOTEUR_DROIT);
-}*/
+void left90(int engine, int engine_count){
+	set_sens_left();
+	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+}
 
 void set_sens_straight(){
 	P2OUT &=~ (ROUE_GAUCHE); //sens
@@ -150,8 +134,7 @@ int main(void){
 	 */
 	init_ports();
 	init_pwm();
-	engine		= ENGINE_STRAIGHT;
-
+	engine 		= 0;
 	// INIT circuit
 	circuit_index	= 0;
 	next_inter_side = get_next_inter(circuit_index, get_circuit());
@@ -161,47 +144,30 @@ int main(void){
 		/**
 		 * LED
 		 */
-		// Ligne centrale
+		/*// Ligne centrale
 		if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
 			P1OUT |= LED3;
 		}else{
 			P1OUT &=~ LED3;
-		}
-
-		// Capteur obstacle test
-		if(test_capt(CAPTEUR_OBSTACLE)){
-			P1OUT |= LED4;
-		}else{
-			P1OUT &=~ LED4;
-		}
-
-		// Gauche
-		if(test_capt(CAPTEUR_BLANCHE_GAUCHE)){
-			P1OUT |= LED1;
-		}else{
-			P1OUT &=~ LED1;
-		}
-
-		//Droite
-		if(test_capt(CAPTEUR_BLANCHE_DROIT)){
-			P1OUT |= LED2;
-		}else{
-			P1OUT &=~ LED2;
-		}
+		}*/
 
 		// STATE
-		switch (engine){
-		case ENGINE_RIGHT:			right90();break;
-		case ENGINE_LEFT:			left90();break;
-		case ENGINE_STOP:			stop();break;
-		case ENGINE_STRAIGHT:		start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-									break;
-		case ENGINE_CORRECT_RIGHT:  start(TURN_PWM, MOTEUR_GAUCHE_PWM);
-									break;
-		case ENGINE_CORRECT_LEFT:  	start(MOTEUR_DROIT_PWM, TURN_PWM);
-									break;
-		default:					start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-									break;
+		if(*engine_count == 0){
+			switch (*engine){
+				case ENGINE_RIGHT:			right90();break;
+				case ENGINE_LEFT:			left90();break;
+				case ENGINE_STOP:			stop();break;
+				case ENGINE_STRAIGHT:		straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+											break;
+				case ENGINE_CORRECT_RIGHT:  straight(TURN_PWM, MOTEUR_GAUCHE_PWM);
+											break;
+				case ENGINE_CORRECT_LEFT:  	straight(MOTEUR_DROIT_PWM, TURN_PWM);
+											break;
+				default:					P1OUT |= LED4;straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+											break;
+			}
+		}else{
+			min_engine(&engine_count);
 		}
 	}
 }
@@ -209,9 +175,6 @@ int main(void){
 // Interruption capteur
 #pragma vector=PORT1_VECTOR
 __interrupt void PORT1_ISR(void) {
-
-	engine = 0;
-
 	/**
 	 * OBSTACLE
 	 */
@@ -223,19 +186,14 @@ __interrupt void PORT1_ISR(void) {
 	 * Perte ligne centrale
 	 */
 	// Ligne extérieure + !centre = Repositionnement
-	if(test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
-		// repositionnement à gauche
+	if(test_capt(CAPTEUR_BLANCHE_CENTRE) && *engine == 0){
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
+			// repositionnement à gauche
 			engine = ENGINE_CORRECT_LEFT;
 		}else{
-		// repositionnement à droite
-		//if((test_capt(CAPTEUR_BLANCHE_GAUCHE) && !test_capt(CAPTEUR_BLANCHE_DROIT))){
+			// repositionnement à droite
 			engine = ENGINE_CORRECT_RIGHT;
 		}
-	}
-
-	if(engine == 0){
-		engine = ENGINE_STRAIGHT;
 	}
 
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
