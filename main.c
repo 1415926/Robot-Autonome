@@ -44,6 +44,8 @@ int main(void) {
    	TA1CCTL2 = OUTMOD_7;
    	TA1CCR0 = 4000;
    	//--------------------------------------------------
+
+   	__enable_interrupt();
    	//--------------------------------------------------
 	// Banque + Boulangerie
 	//-------------------------------------------------------------------
@@ -307,24 +309,29 @@ __interrupt void PORT1_ISR(void) {
 	 * OBSTACLE
 	 */
 	if(!test_capt(CAPTEUR_OBSTACLE)){
-		//engine = ENGINE_STOP;
+
 	}
 
 	/**
 	 * Perte ligne centrale
 	 */
-	// Ligne ext�rieure + !centre = Repositionnement
+	// Ligne extérieure + !centre = Repositionnement
 	if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
-			// repositionnement � gauche
+			// repositionnement à gauche
 			TA1CCR2 = TURN_PWM;
 			P1OUT ^= (BIT6);
 		}else{
-			// repositionnement � droite
+			// repositionnement à droite
 			TA1CCR1 = TURN_PWM;
 			P1OUT ^= (BIT0);
 		}
 	}
+
+	reset_capt(CAPTEUR_BLANCHE_CENTRE);
+	reset_capt(CAPTEUR_BLANCHE_DROIT);
+	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
+	reset_capt(CAPTEUR_OBSTACLE);
 }
 
 
