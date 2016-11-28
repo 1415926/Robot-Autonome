@@ -80,7 +80,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="archive/main.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Maison-Poste-Hopital.c|Maison-Poste-Boulangerie.c|Maison-Poste-Banque.c|Maison-Banque-Poste.c|Maison-Banque-Hopital.c|Maison-Banque-Boulangerie.c|archive/main.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
