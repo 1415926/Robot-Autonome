@@ -12,10 +12,11 @@
 #define GAUCHE 1
 #define DROITE 2
 #define CIBLE 3
+#define STOP 4
 
 // Constantes de circuits
 // index 1 : nombre d'intersection
-static const int C1[] 	= {10, GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, 10}; 			// Boulangerie + Banque + Maison
+static const int C1[] 	= {2, GAUCHE, 10, GAUCHE, 5, DROITE, 10, GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, STOP}; 			// Boulangerie + Banque + Maison
 static const int C2[] 	= {GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, GAUCHE, GAUCHE, DROITE, 10, 10}; 		// Boulangerie + Hopital + Maison
 static const int C3[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, 10, GAUCHE, DROITE, GAUCHE, DROITE, 10, 10}; 	// Boulangerie + Poste + Maison
 static const int C4[] 	= {10, GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, 10, DROITE, GAUCHE, 10, DROITE, 10, 10};	// Banque + Hopital + Maison

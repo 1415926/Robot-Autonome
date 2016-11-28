@@ -23,6 +23,7 @@
 #define ENGINE_STRAIGHT 5
 #define ENGINE_STOP 6
 #define ENGINE_CIBLE 7
+#define VITESSE 175.2
 
 // includes
 #include <msp430g2553.h>
@@ -43,6 +44,7 @@ const int * get_circuit(void);
 void set_sens_straight(void);
 void set_sens_right(void);
 void set_sens_left(void);
+void delay_ms(int milliseconds);
 int main(void);
 
 // vars

@@ -69,22 +69,6 @@ void stop(){
 	start(0,0);
 }
 
-void straight(int roue_right, int roue_left){
-	set_sens_straight();
-	start(roue_right, roue_left);
-}
-
-void right90(){
-	set_sens_right();
-	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-	__delay_cycles(10000);
-}
-
-void left90(){
-	set_sens_left();
-	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-	__delay_cycles(10000);
-}
 
 void set_sens_straight(){
 	P2OUT &=~ (ROUE_GAUCHE); //sens
@@ -92,15 +76,18 @@ void set_sens_straight(){
 }
 
 void set_sens_right(){
-	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT &=~ ROUE_GAUCHE; //sens
 	P2OUT &=~ ROUE_DROITE; //sens
 }
 
 void set_sens_left(){
-	P2OUT |= (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_GAUCHE; //sens
 	P2OUT |= ROUE_DROITE; //sens
 }
 
+int temps(int mm){
+	return (mm / VITESSE)/1000000;
+}
 
 /**
  * GPS
@@ -126,9 +113,17 @@ const int * get_circuit(void){
 
 // retourne le nombre d'intersection attendue
 int get_next_action(int index, const int * circuit){
-	return circuit[index+1];
+	return circuit[index];
 }
 
+void delay_ms(int milliseconds)
+{
+   while(milliseconds > 0)
+   {
+      milliseconds--;
+       __delay_cycles(990);
+   }
+}
 
 int main(void){
 	/**
@@ -141,58 +136,36 @@ int main(void){
 	circuit_index	= 0;
 
 	__enable_interrupt();
+	start(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 	while(1){
 
-		/**
-		 * LED
-		 */
-		/*// Ligne centrale
-		if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
-			P1OUT |= LED3;
-		}else{
-			P1OUT &=~ LED3;
-		}*/
-
 		// Parcours
-		if(engine == 0 && engine_count == 0){
-			next_action 		= get_next_action(circuit_index, get_circuit());
+		if(engine == 0){
+			next_action = get_next_action(circuit_index, get_circuit());
 
 			// tourner à gauche
-			if(next_action == GAUCHE){
-				engine			= ENGINE_LEFT;
+			if(next_action 		== GAUCHE){
+				set_sens_left();
+				__delay_cycles(425000);
 
 			// tourner à droite
 			}else if(next_action == DROITE){
-				engine 			= ENGINE_RIGHT;
+				set_sens_right();
+				__delay_cycles(425000);
 
 			// est sur la cible
 			}else if(next_action == CIBLE){
 				engine 			= ENGINE_CIBLE;
 
+			// stop
+			}else if(next_action == STOP){
+				stop();
+
 			// tout droit
 			}else{
-				engine_count 	= next_action;
-				engine 			= ENGINE_STRAIGHT;
+				set_sens_straight();
+				delay_ms(next_action);
 			}
-		}else if((engine == ENGINE_STRAIGHT || engine == ENGINE_CORRECT_LEFT || engine == ENGINE_CORRECT_RIGHT) && engine_count > 0){
-			__delay_cycles(1000);
-			engine_count--;
-		}
-
-
-		// Engine state
-		switch (engine){
-			case ENGINE_RIGHT:			right90();break;
-			case ENGINE_LEFT:			left90();break;
-			case ENGINE_STOP:			stop();break;
-			case ENGINE_STRAIGHT:		straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-										break;
-			case ENGINE_CORRECT_RIGHT:  straight(TURN_PWM, MOTEUR_GAUCHE_PWM);
-										break;
-			case ENGINE_CORRECT_LEFT:  	straight(MOTEUR_DROIT_PWM, TURN_PWM);
-										break;
-			default:					straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-										break;
 		}
 
 		// reset
@@ -208,25 +181,25 @@ __interrupt void PORT1_ISR(void) {
 	 * OBSTACLE
 	 */
 	if(!test_capt(CAPTEUR_OBSTACLE)){
-		engine = ENGINE_STOP;
+		//engine = ENGINE_STOP;
 	}
 
 	/**
 	 * Perte ligne centrale
 	 */
 	// Ligne extérieure + !centre = Repositionnement
-	if(test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
+	/*if(test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
 			// repositionnement à gauche
-			engine = ENGINE_CORRECT_LEFT;
+			start(MOTEUR_DROIT_PWM, TURN_PWM);
 		}else{
 			// repositionnement à droite
-			engine = ENGINE_CORRECT_RIGHT;
+			start(TURN_PWM, MOTEUR_GAUCHE_PWM);
 		}
 	}
 
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
 	reset_capt(CAPTEUR_BLANCHE_DROIT);
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
-	reset_capt(CAPTEUR_OBSTACLE);
+	reset_capt(CAPTEUR_OBSTACLE);*/
 }
