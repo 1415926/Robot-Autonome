@@ -35,13 +35,13 @@ void init_pwm(void);
 void start(int roue_right, int roue_left);
 void straight(int roue_right, int roue_left);
 void stop(void);
-void left90();
-void right90();
+void left90(void);
+void right90(void);
 int get_next_action(int index, const int * circuit);
 const int * get_circuit(void);
-void set_sens_straight();
-void set_sens_right();
-void set_sens_left();
+void set_sens_straight(void);
+void set_sens_right(void);
+void set_sens_left(void);
 int main(void);
 
 // vars

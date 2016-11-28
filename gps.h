@@ -15,7 +15,7 @@
 
 // Constantes de circuits
 // index 1 : nombre d'intersection
-static const int C1[] 	= {10, GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, AVANCE}; 			// Boulangerie + Banque + Maison
+static const int C1[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, AVANCE}; 			// Boulangerie + Banque + Maison
 static const int C2[] 	= {GAUCHE, GAUCHE, GAUCHE, DROITE, DROITE, GAUCHE, GAUCHE, DROITE, AVANCE, AVANCE}; 		// Boulangerie + Hopital + Maison
 static const int C3[] 	= {GAUCHE, GAUCHE, DROITE, GAUCHE, AVANCE, GAUCHE, DROITE, GAUCHE, DROITE, AVANCE, AVANCE}; 	// Boulangerie + Poste + Maison
 static const int C4[] 	= {AVANCE, GAUCHE, GAUCHE, DROITE, GAUCHE, GAUCHE, AVANCE, DROITE, GAUCHE, AVANCE, DROITE, AVANCE, AVANCE};	// Banque + Hopital + Maison

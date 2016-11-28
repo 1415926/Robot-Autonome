@@ -123,7 +123,7 @@ const int * get_circuit(void){
 }
 
 // retourne le nombre d'intersection attendue
-int get_next_inter(int index, const int * circuit){
+int get_next_action(int index, const int * circuit){
 	return circuit[index+1];
 }
 
@@ -134,10 +134,10 @@ int main(void){
 	 */
 	init_ports();
 	init_pwm();
-	engine 		= 0;
+	engine 			= 0;
 	// INIT circuit
 	circuit_index	= 0;
-	next_action = get_next_action(circuit_index, get_circuit());
+	next_action 	= get_next_action(circuit_index, get_circuit());
 	__enable_interrupt();
 	while(1){
 
@@ -162,7 +162,7 @@ int main(void){
 										break;
 			case ENGINE_CORRECT_LEFT:  	straight(MOTEUR_DROIT_PWM, TURN_PWM);
 										break;
-			default:					P1OUT |= LED4;straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+			default:					straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
 										break;
 		}
 	}
