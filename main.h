@@ -37,7 +37,7 @@ void straight(int roue_right, int roue_left);
 void stop(void);
 void left90();
 void right90();
-int get_next_inter(int index, const int * circuit);
+int get_next_action(int index, const int * circuit);
 const int * get_circuit(void);
 void set_sens_straight();
 void set_sens_right();
@@ -49,5 +49,5 @@ int engine;
 int roue_left;
 int roue_right;
 int circuit_index;
-int next_inter_side;
+int next_action;
 #endif

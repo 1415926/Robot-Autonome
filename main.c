@@ -137,7 +137,7 @@ int main(void){
 	engine 		= 0;
 	// INIT circuit
 	circuit_index	= 0;
-	next_inter_side = get_next_inter(circuit_index, get_circuit());
+	next_action = get_next_action(circuit_index, get_circuit());
 	__enable_interrupt();
 	while(1){
 
@@ -152,22 +152,18 @@ int main(void){
 		}*/
 
 		// STATE
-		if(*engine_count == 0){
-			switch (*engine){
-				case ENGINE_RIGHT:			right90();break;
-				case ENGINE_LEFT:			left90();break;
-				case ENGINE_STOP:			stop();break;
-				case ENGINE_STRAIGHT:		straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-											break;
-				case ENGINE_CORRECT_RIGHT:  straight(TURN_PWM, MOTEUR_GAUCHE_PWM);
-											break;
-				case ENGINE_CORRECT_LEFT:  	straight(MOTEUR_DROIT_PWM, TURN_PWM);
-											break;
-				default:					P1OUT |= LED4;straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
-											break;
-			}
-		}else{
-			min_engine(&engine_count);
+		switch (engine){
+			case ENGINE_RIGHT:			right90();break;
+			case ENGINE_LEFT:			left90();break;
+			case ENGINE_STOP:			stop();break;
+			case ENGINE_STRAIGHT:		straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+										break;
+			case ENGINE_CORRECT_RIGHT:  straight(TURN_PWM, MOTEUR_GAUCHE_PWM);
+										break;
+			case ENGINE_CORRECT_LEFT:  	straight(MOTEUR_DROIT_PWM, TURN_PWM);
+										break;
+			default:					P1OUT |= LED4;straight(MOTEUR_DROIT_PWM, MOTEUR_GAUCHE_PWM);
+										break;
 		}
 	}
 }
