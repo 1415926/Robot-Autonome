@@ -49,7 +49,7 @@ int main(void) {
    	P1OUT &= ~(BIT0);
    	P1OUT |= (BIT6);
    	//--------------------------------------------------
-	// Banque + Poste
+	// Banque + Boulangerie
 	//-------------------------------------------------------------------
 
 	//Avancer-------------------------------------------
@@ -190,7 +190,53 @@ int main(void) {
 	TA1CCR2 = MOTEUR_DROIT_PWM;
 	//--------------------------------------------------
 
-	__delay_cycles(EXCEL_215 + EXCEL_301 ); // F
+	__delay_cycles(EXCEL_215 + EXCEL_301 + EXCEL_382); // D
+
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
+
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
+
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
+
+	__delay_cycles(EXCEL_998); // C
+
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
+
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
+
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
+
+	__delay_cycles(EXCEL_280); // B
 
 	//Stop----------------------------------------------
 	TA1CCR1 = 0;
@@ -213,7 +259,7 @@ int main(void) {
 	TA1CCR2 = MOTEUR_DROIT_PWM;
 	//--------------------------------------------------
 
-	__delay_cycles(EXCEL_586 + CIBLE); // POSTE
+	__delay_cycles(EXCEL_177 + CIBLE); // Boulangerie
 
 	//Stop----------------------------------------------
 	TA1CCR1 = 0;
@@ -238,30 +284,7 @@ int main(void) {
 	TA1CCR2 = MOTEUR_DROIT_PWM;
 	//--------------------------------------------------
 
-	__delay_cycles(EXCEL_586 + CIBLE); // F
-
-	//Stop----------------------------------------------
-	TA1CCR1 = 0;
-	TA1CCR2 = 0;
-	//--------------------------------------------------
-
-	//Tourner gauche------------------------------------
-	P2OUT &= ~(ROUE_GAUCHE); //sens
-	P2OUT &= ~(ROUE_DROITE); //sens
-	TA1CCR1 = MOTEUR_GAUCHE_PWM;
-	TA1CCR2 = MOTEUR_DROIT_PWM;
-
-	__delay_cycles(TOURNER);
-	//--------------------------------------------------
-
-	//Avancer-------------------------------------------
-	P2OUT &=~ (ROUE_GAUCHE); //sens
-	P2OUT |= ROUE_DROITE; //sens
-	TA1CCR1 = MOTEUR_GAUCHE_PWM;
-	TA1CCR2 = MOTEUR_DROIT_PWM;
-	//--------------------------------------------------
-
-	__delay_cycles(EXCEL_215); // G
+	__delay_cycles(EXCEL_177 + CIBLE); // B
 
 	//Stop----------------------------------------------
 	TA1CCR1 = 0;
@@ -284,13 +307,35 @@ int main(void) {
 	TA1CCR2 = MOTEUR_DROIT_PWM;
 	//--------------------------------------------------
 
-	__delay_cycles(EXCEL_732 + EXCEL_311 + EXCEL_266);
+	__delay_cycles(EXCEL_617); // A
 
 	//Stop----------------------------------------------
 	TA1CCR1 = 0;
 	TA1CCR2 = 0;
 	//--------------------------------------------------
 
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
+
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
+
+	__delay_cycles(EXCEL_311+CIBLE); // MAISON
+
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
    	//Fin-----------------------------------------------
    	while(1)
