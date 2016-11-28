@@ -182,7 +182,7 @@ __interrupt void PORT1_ISR(void) {
 	 * Perte ligne centrale
 	 */
 	// Ligne extérieure + !centre = Repositionnement
-	if(test_capt(CAPTEUR_BLANCHE_CENTRE) && *engine == 0){
+	if(test_capt(CAPTEUR_BLANCHE_CENTRE) && engine == 0){
 		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
 			// repositionnement à gauche
 			engine = ENGINE_CORRECT_LEFT;
