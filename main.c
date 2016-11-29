@@ -51,246 +51,246 @@ int main(void) {
 	//-------------------------------------------------------------------
 
    	//--------------------------------------------------
-   		// Poste + Boulangerie
-   		//-------------------------------------------------------------------
+	// Poste + Boulangerie
+	//-------------------------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_732 + EXCEL_311 + EXCEL_266); // G
+	__delay_cycles(EXCEL_732 + EXCEL_311 + EXCEL_266); // G
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner gauche------------------------------------
-   		P2OUT |= ROUE_GAUCHE; //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_215); // F
+	__delay_cycles(EXCEL_215); // F
 
-   		//Tourner droite------------------------------------
-   		P2OUT &=~ ROUE_GAUCHE; //sens
-   		P2OUT &=~ ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_586 + CIBLE); // Poste
+	__delay_cycles(EXCEL_586 + CIBLE); // Poste
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		__delay_cycles(3000000);
+	__delay_cycles(3000000);
 
-   		//Tourner gauche------------------------------------
-   		P2OUT |= ROUE_GAUCHE; //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER * 2);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER * 2);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_586 + CIBLE); // F
+	__delay_cycles(EXCEL_586 + CIBLE); // F
 
-   		//Tourner droite------------------------------------
-   		P2OUT &=~ ROUE_GAUCHE; //sens
-   		P2OUT &=~ ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_382); // E
+	__delay_cycles(EXCEL_382); // E
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner droite------------------------------------
-   		P2OUT &=~ ROUE_GAUCHE; //sens
-   		P2OUT &=~ ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_135 + CIBLE); // HOPITAL
+	__delay_cycles(EXCEL_135 + CIBLE); // HOPITAL
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		__delay_cycles(3000000);
+	__delay_cycles(3000000);
 
-   		//Tourner gauche------------------------------------
-   		P2OUT |= ROUE_GAUCHE; //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER * 2);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER * 2);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_135 + CIBLE); // E
+	__delay_cycles(EXCEL_135 + CIBLE); // E
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner droite------------------------------------
-   		P2OUT &=~ ROUE_GAUCHE; //sens
-   		P2OUT &=~ ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_301); // D
+	__delay_cycles(EXCEL_301); // D
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner gauche------------------------------------
-   		P2OUT |= ROUE_GAUCHE; //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_998); // C
+	__delay_cycles(EXCEL_998); // C
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner gauche------------------------------------
-   		P2OUT |= ROUE_GAUCHE; //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner gauche------------------------------------
+	P2OUT |= ROUE_GAUCHE; //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_280 + EXCEL_617); // A
+	__delay_cycles(EXCEL_280 + EXCEL_617); // A
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
 
-   		//Tourner droite------------------------------------
-   		P2OUT &=~ ROUE_GAUCHE; //sens
-   		P2OUT &=~ ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
+	//Tourner droite------------------------------------
+	P2OUT &=~ ROUE_GAUCHE; //sens
+	P2OUT &=~ ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
 
-   		__delay_cycles(TOURNER);
-   		//--------------------------------------------------
+	__delay_cycles(TOURNER);
+	//--------------------------------------------------
 
-   		//Avancer-------------------------------------------
-   		P2OUT &=~ (ROUE_GAUCHE); //sens
-   		P2OUT |= ROUE_DROITE; //sens
-   		TA1CCR1 = MOTEUR_GAUCHE_PWM;
-   		TA1CCR2 = MOTEUR_DROIT_PWM;
-   		//--------------------------------------------------
+	//Avancer-------------------------------------------
+	P2OUT &=~ (ROUE_GAUCHE); //sens
+	P2OUT |= ROUE_DROITE; //sens
+	TA1CCR1 = MOTEUR_GAUCHE_PWM;
+	TA1CCR2 = MOTEUR_DROIT_PWM;
+	//--------------------------------------------------
 
-   		__delay_cycles(EXCEL_311+CIBLE); // MAISON
+	__delay_cycles(EXCEL_311+CIBLE); // MAISON
 
-   		//Stop----------------------------------------------
-   		TA1CCR1 = 0;
-   		TA1CCR2 = 0;
-   		//--------------------------------------------------
+	//Stop----------------------------------------------
+	TA1CCR1 = 0;
+	TA1CCR2 = 0;
+	//--------------------------------------------------
    	//Fin-----------------------------------------------
    	while(1)
    	{
@@ -312,20 +312,13 @@ __interrupt void PORT1_ISR(void) {
 
 	}
 
-	/**
-	 * Perte ligne centrale
-	 */
-	// Ligne extérieure + !centre = Repositionnement
-	if(test_capt(CAPTEUR_BLANCHE_CENTRE)){
-		if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
-			// repositionnement à gauche
-			TA1CCR2 = TURN_PWM;
-			P1OUT ^= (BIT6);
-		}else{
-			// repositionnement à droite
-			TA1CCR1 = TURN_PWM;
-			P1OUT ^= (BIT0);
-		}
+	// Repositionnement
+	if((test_capt(CAPTEUR_BLANCHE_DROIT) && !test_capt(CAPTEUR_BLANCHE_GAUCHE))){
+		// repositionnement à gauche
+		TA1CCR2 = TURN_PWM;
+	}else{
+		// repositionnement à droite
+		TA1CCR1 = TURN_PWM;
 	}
 
 	reset_capt(CAPTEUR_BLANCHE_CENTRE);
@@ -333,19 +326,3 @@ __interrupt void PORT1_ISR(void) {
 	reset_capt(CAPTEUR_BLANCHE_GAUCHE);
 	reset_capt(CAPTEUR_OBSTACLE);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
